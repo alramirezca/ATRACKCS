@@ -1,4 +1,4 @@
-name: atrackcs_rep
+name: atrackcs_py3
 channels:
   - defaults
   - conda-forge
