@@ -39,7 +39,7 @@ Recommend building the Python environment using [Anaconda](https://www.anaconda.
 
 ### Create conda environment using environment file
 
-This way will install the optional `cartopy` package and allow you to run
+This way will install the optional `folium` package and allow you to run
 the notebook examples.
 
 After Anaconda installation, git clone this repository:
@@ -51,7 +51,7 @@ git clone https://github.com/alramirezca/atrackcs
 Then build a new conda environment using the environment file provided. For example:
 
 ```
-cd IPART
+cd ATRACKCS
 conda env create -f env_py3.yml
 ```
 
