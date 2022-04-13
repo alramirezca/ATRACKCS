@@ -23,6 +23,14 @@ warnings.filterwarnings("ignore")
 
 #___________________________________Functions______________________________________________________
 
+class MCS():
+
+    def __init__(self, geodataframe):
+        self.data = geodataframe
+        
+    def save(self, path):
+        self.save = self.data.to_csv(path)
+    
 
 def polygon_identify(data_id, variable):
     """
@@ -77,7 +85,7 @@ def polygon_identify(data_id, variable):
     return gdf      
 
 def thresholds(func):
-    def valid_thresholds(data, variables, Tb, area_Tb, utm_local_zone):
+    def valid_thresholds(data, variables, Tb, area_Tb, utm_local_zone, path_save):
         if Tb not in range(200,241):
             raise ValueError("You must enter a value of Tb between 200 K - 240 K")
         if variables not in ["Both", "Tb"]:
@@ -86,23 +94,25 @@ def thresholds(func):
             raise ValueError("You must enter an area_Tb greater or equal than 1000 km2")
         if not isinstance(utm_local_zone, int):
             raise ValueError("You must enter a valid UTM local zone")
-        return func(data, variables, Tb, area_Tb, utm_local_zone)
+        if path_save == None:
+            pass
+        return func(data, variables, Tb, area_Tb, utm_local_zone, path_save)
     return valid_thresholds
 
 def confirm_P_data(func):
-    def valid_variables(data, variables, Tb, area_Tb, utm_local_zone):
+    def valid_variables(data, variables, Tb, area_Tb, utm_local_zone, path_save):
         if variables == "Both":  
             try:
                 data["P"]
             except:
                 raise TypeError("There is not P data, please change the parameter variables for Tb")
-        return func(data, variables, Tb, area_Tb, utm_local_zone)
+        return func(data, variables, Tb, area_Tb, utm_local_zone, path_save)
     return valid_variables
            
 
 @confirm_P_data
 @thresholds
-def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_zone = None):
+def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_zone = None, path_save = None):
     """
     Function for identifying the spots, in a time step, based on the methodology
     of brightness temperature and precipitation association.
@@ -181,7 +191,18 @@ def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_z
     gdf.reset_index(inplace = True, drop = True)
         
     print("Spots identification completed")
+    
+    gdf = MCS(gdf)
 
-    return gdf
+    
+    if path_save is None:
+        pass
+    else:
+        try:
+            gdf.save(path_save)
+        except:
+            raise FileNotFoundError("No such file or directory: " + str(path_save))
+
+    return gdf.data
 
     

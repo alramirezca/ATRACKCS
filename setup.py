@@ -7,7 +7,7 @@ from setuptools import find_packages, setup
 
 setup(name='atrackcs',
         version='1.0',
-        description='ATRACKCS is a Python package for the identification and tracking of convective systems using image-processing techniques.',
+        description='ATRACKCS is a Python package for the detection and tracking of convective systems using image-processing techniques.',
         author='Álvaro Ramírez Cardona',
         author_email='alramirezca@unal.edu.co',
         url='https://github.com/alramirezca/atrackcs',

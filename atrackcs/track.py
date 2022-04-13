@@ -22,6 +22,14 @@ warnings.filterwarnings("ignore")
 
 #___________________________________Functions______________________________________________________
 
+class TRACKS():
+
+    def __init__(self, geodataframe):
+        self.data = geodataframe
+        
+    def save(self, path):
+        self.save = self.data.to_csv(path)
+
 def min_dist(point, gpd2):
     """
     Function to find the nearest polygon based on a georeferenced point.
@@ -38,7 +46,7 @@ def min_dist(point, gpd2):
     geoseries = gpd.iloc[gpd['Dist'].argmin()]
     return geoseries
 
-def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = None):
+def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = None, path_save = None):
     global msc_counter
     """
     Function for tracking convective systems according to the threshold_overlapping_percentage.
@@ -278,4 +286,16 @@ def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = Non
     #Creating an original index
     sup["id_gdf"] = None
     sup["id_gdf"] = sup.index
-    return sup
+    
+    sup = TRACKS(sup)
+    
+    if path_save is None:
+        pass
+    else:
+        try:
+            sup.save(path_save)
+        except:
+            raise FileNotFoundError("No such file or directory: " + str(path_save))
+    
+    
+    return sup.data

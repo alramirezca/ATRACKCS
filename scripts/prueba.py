@@ -5,6 +5,7 @@ Created on Thu Apr  7 18:45:15 2022
 @author: ASUS
 """
 
+#from atrackcs.identify import MCS
 from atrackcs.utils import funcs
 from atrackcs.identify import identify_mcs
 from atrackcs.features import features_Tb, features_P, features_Tracks
@@ -30,18 +31,24 @@ UTC_LOCAL_HOUR = 5
 #___________________________________Functions______________________________________________________
 
 
-phTb= "C:/Users/ASUS/Desktop/udea/Prueba_GPM/prueba_ev5/tb/"
-phP= "C:/Users/ASUS/Desktop/udea/Prueba_GPM/prueba_ev5/p/"
+phTb= "C:/Users/ASUS/Desktop/udea/Prueba_GPM/prueba_test_2/tb/"
+phP= "C:/Users/ASUS/Desktop/udea/Prueba_GPM/prueba_test_2/p/"
 
-ds = funcs.readNC(pathTb = phTb, pathP =phP, utc_local_hour = UTC_LOCAL_HOUR)
+ds = funcs.readNC(pathTb = phTb, pathP =None, utc_local_hour = UTC_LOCAL_HOUR)
 
-sup = identify_mcs(ds, variables = "Tb", Tb = 225, area_Tb = 1000, utm_local_zone = UTM_LOCAL_ZONE)
+
+
+sup = identify_mcs(ds, variables = "Tb", Tb = 225, area_Tb = 1000, 
+                   utm_local_zone = UTM_LOCAL_ZONE, path_save = None)
+
 
 sup = features_Tb(sup, ds)
 
-sup = features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipitation = False)
+#sup = features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipitation = False)
 
-sup = track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = UTM_LOCAL_ZONE)
+sup = track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = UTM_LOCAL_ZONE,
+                path_save = None)
 
-resume, reg = features_Tracks(sup)
+resume = features_Tracks(sup, encript_index =  False, 
+                         path_save = r"C:\Users\ASUS\Desktop\udea\Prueba_GPM\prueba_test_2\resultados\track_test.csv")
 

@@ -21,6 +21,14 @@ warnings.filterwarnings("ignore")
 
 #___________________________________Functions______________________________________________________
 
+class TRACKS():
+
+    def __init__(self, geodataframe):
+        self.data = geodataframe
+        
+    def save(self, path):
+        self.save = self.data.to_csv(path)
+
 
 #________________Brightness Temperature
 def features_Tb(sup, ds):
@@ -336,7 +344,8 @@ def distance_direction_Tracks(sup):
     #print ("distances-directions-states of tracks completed")
     return sup
     
-def features_Tracks(sup, initial_time_hour = 0, extra_name = None):
+def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encript_index = True,
+                    path_save = None):
     """
     Function for calculating characteristics associated with each tracking
     average speed, average distance, average direction, 
@@ -362,18 +371,26 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None):
     new_belong = []
     new_track_id = []
     
-    for track_id in NUEVODF.index.levels[1]:
-        new_track_id.append(str(uuid.uuid4())[-22:])
-    dic_replace_track_id = dict(zip(NUEVODF.index.levels[1].values, new_track_id))
+
+    #Encriptying index track and index spot     
+    if encript_index == True:
+        for track_id in NUEVODF.index.levels[1]:
+            new_track_id.append(str(uuid.uuid4())[-22:])
+        dic_replace_track_id = dict(zip(NUEVODF.index.levels[1].values, new_track_id))
+        
+        for belong_id in NUEVODF.index.levels[0]:
+            new_belong.append(str(uuid.uuid4())[:13])
+        dic_replace_belong = dict(zip(NUEVODF.index.levels[0].values, new_belong))
+
+        reg_sup_res =  NUEVODF.reset_index()
+        
+        reg_sup_res.belong = reg_sup_res.belong.replace(dic_replace_belong)
+        reg_sup_res.id_gdf = reg_sup_res.id_gdf.replace(dic_replace_track_id)
+    else:
+        reg_sup_res =  NUEVODF.reset_index()
+        pass
     
-    for belong_id in NUEVODF.index.levels[0]:
-        new_belong.append(str(uuid.uuid4())[:13])
-    dic_replace_belong = dict(zip(NUEVODF.index.levels[0].values, new_belong))
-    
-    reg_sup_res =  NUEVODF.reset_index()
-    
-    reg_sup_res.belong = reg_sup_res.belong.replace(dic_replace_belong)
-    reg_sup_res.id_gdf = reg_sup_res.id_gdf.replace(dic_replace_track_id)
+
        
     reg_sup_res = reg_sup_res.drop(labels=['Tb', 'min_tb', 'max_tb','u','v', 'estado','estado_porcentaje'],axis=1)
        
@@ -404,7 +421,18 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None):
     #Saving as .csv the results
     #reg_sup.to_csv(pathResultados + "resume_"+str(reg_sup.time.min())[:-7]+"_"+str(reg_sup.time.max())[:-7]+"_"+str(extra_name)+".csv")
  
-    return reg_sup, reg_sup_res
+    reg_sup = TRACKS(reg_sup)
+    
+    if path_save is None:
+        pass
+    else:
+        try:
+            reg_sup.save(path_save)
+        except:
+            raise FileNotFoundError("No such file or directory: " + str(path_save))
+       
+ 
+    return reg_sup.data
 
 
 

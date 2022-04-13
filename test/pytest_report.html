@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Test Report</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) { // eslint-disable-line no-redeclare
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function findAll(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sortColumn(elem) {
+    toggleSortStates(elem);
+    const colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    let key;
+    if (elem.classList.contains('result')) {
+        key = keyResult;
+    } else if (elem.classList.contains('links')) {
+        key = keyLink;
+    } else {
+        key = keyAlpha;
+    }
+    sortTable(elem, key(colIndex));
+}
+
+function showAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(showExtras);
+}
+
+function hideAllExtras() { // eslint-disable-line no-unused-vars
+    findAll('.col-result').forEach(hideExtras);
+}
+
+function showExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.remove('collapsed');
+    expandcollapse.classList.remove('expander');
+    expandcollapse.classList.add('collapser');
+}
+
+function hideExtras(colresultElem) {
+    const extras = colresultElem.parentNode.nextElementSibling;
+    const expandcollapse = colresultElem.firstElementChild;
+    extras.classList.add('collapsed');
+    expandcollapse.classList.remove('collapser');
+    expandcollapse.classList.add('expander');
+}
+
+function showFilters() {
+    const filterItems = document.getElementsByClassName('filter');
+    for (let i = 0; i < filterItems.length; i++)
+        filterItems[i].hidden = false;
+}
+
+function addCollapse() {
+    // Add links for show/hide all
+    const resulttable = find('table#results-table');
+    const showhideall = document.createElement('p');
+    showhideall.innerHTML = '<a href="javascript:showAllExtras()">Show all details</a> / ' +
+                            '<a href="javascript:hideAllExtras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    findAll('.col-result').forEach(function(elem) {
+        const collapsed = getQueryParameter('collapsed') || 'Passed';
+        const extras = elem.parentNode.nextElementSibling;
+        const expandcollapse = document.createElement('span');
+        if (extras.classList.contains('collapsed')) {
+            expandcollapse.classList.add('expander');
+        } else if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add('collapsed');
+            expandcollapse.classList.add('expander');
+        } else {
+            expandcollapse.classList.add('collapser');
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener('click', function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains('collapsed')) {
+                showExtras(event.currentTarget);
+            } else {
+                hideExtras(event.currentTarget);
+            }
+        });
+    });
+}
+
+function getQueryParameter(name) {
+    const match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () { // eslint-disable-line no-unused-vars
+    resetSortHeaders();
+
+    addCollapse();
+
+    showFilters();
+
+    sortColumn(find('.initial-sort'));
+
+    findAll('.sortable').forEach(function(elem) {
+        elem.addEventListener('click',
+            function() {
+                sortColumn(elem);
+            }, false);
+    });
+}
+
+function sortTable(clicked, keyFunc) {
+    const rows = findAll('.results-table-row');
+    const reversed = !clicked.classList.contains('asc');
+    const sortedRows = sort(rows, keyFunc, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    const thead = document.getElementById('results-table-head');
+    document.getElementById('results-table').remove();
+    const parent = document.createElement('table');
+    parent.id = 'results-table';
+    parent.appendChild(thead);
+    sortedRows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName('BODY')[0].appendChild(parent);
+}
+
+function sort(items, keyFunc, reversed) {
+    const sortArray = items.map(function(item, i) {
+        return [keyFunc(item), i];
+    });
+
+    sortArray.sort(function(a, b) {
+        const keyA = a[0];
+        const keyB = b[0];
+
+        if (keyA == keyB) return 0;
+
+        if (reversed) {
+            return keyA < keyB ? 1 : -1;
+        } else {
+            return keyA > keyB ? 1 : -1;
+        }
+    });
+
+    return sortArray.map(function(item) {
+        const index = item[1];
+        return items[index];
+    });
+}
+
+function keyAlpha(colIndex) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[colIndex].firstChild.data.toLowerCase();
+    };
+}
+
+function keyLink(colIndex) {
+    return function(elem) {
+        const dataCell = elem.childNodes[1].childNodes[colIndex].firstChild;
+        return dataCell == null ? '' : dataCell.innerText.toLowerCase();
+    };
+}
+
+function keyResult(colIndex) {
+    return function(elem) {
+        const strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+            'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[colIndex].firstChild.data);
+    };
+}
+
+function resetSortHeaders() {
+    findAll('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    findAll('.sortable').forEach(function(elem) {
+        const icon = document.createElement('div');
+        icon.className = 'sort-icon';
+        icon.textContent = 'vvv';
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove('desc', 'active');
+        elem.classList.add('asc', 'inactive');
+    });
+}
+
+function toggleSortStates(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        resetSortHeaders();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function isAllRowsHidden(value) {
+    return value.hidden == false;
+}
+
+function filterTable(elem) { // eslint-disable-line no-unused-vars
+    const outcomeAtt = 'data-test-result';
+    const outcome = elem.getAttribute(outcomeAtt);
+    const classOutcome = outcome + ' results-table-row';
+    const outcomeRows = document.getElementsByClassName(classOutcome);
+
+    for(let i = 0; i < outcomeRows.length; i++){
+        outcomeRows[i].hidden = !elem.checked;
+    }
+
+    const rows = findAll('.results-table-row').filter(isAllRowsHidden);
+    const allRowsHidden = rows.length == 0 ? true : false;
+    const notFoundMessage = document.getElementById('not-found-message');
+    notFoundMessage.hidden = !allRowsHidden;
+}
+</script>
+    <h1>pytest_report.html</h1>
+    <p>Report generated on 13-Apr-2022 at 18:08:32 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.1.1</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>Packages</td>
+        <td>{"pluggy": "1.0.0", "py": "1.11.0", "pytest": "7.1.1"}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>Windows-10-10.0.19041-SP0</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{"html": "3.1.1", "metadata": "2.0.1"}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.7.13</td></tr></table>
+    <h2>Summary</h2>
+    <p>1 tests ran in 40.33 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">1 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable" col="duration">Duration</th>
+          <th class="sortable links" col="links">Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">test/test_tb.py::test_run_tb</td>
+          <td class="col-duration">38.25</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>Complete Tb data reading 2019-12-29T16:00 - 2019-12-29T19:00
+Spots identification completed
+Estimating Tb spots features: 
+Estimating trajectories: 
+Estimating distance and direction between geometrics centroids: 
+<br/> ------------------------------Captured stderr call------------------------------ <br/>  0%|          | 0/167 [00:00&lt;?, ?it/s]  1%|          | 2/167 [00:00&lt;00:11, 13.86it/s]  2%|▏         | 4/167 [00:00&lt;00:12, 12.80it/s]  4%|▎         | 6/167 [00:00&lt;00:12, 13.05it/s]  5%|▍         | 8/167 [00:00&lt;00:12, 12.84it/s]  6%|▌         | 10/167 [00:00&lt;00:12, 12.72it/s]  7%|▋         | 12/167 [00:00&lt;00:13, 11.63it/s]  8%|▊         | 14/167 [00:01&lt;00:13, 11.04it/s] 10%|▉         | 16/167 [00:01&lt;00:13, 11.47it/s] 11%|█         | 18/167 [00:01&lt;00:12, 11.78it/s] 12%|█▏        | 20/167 [00:01&lt;00:11, 12.46it/s] 13%|█▎        | 22/167 [00:01&lt;00:10, 13.21it/s] 14%|█▍        | 24/167 [00:01&lt;00:10, 13.25it/s] 16%|█▌        | 26/167 [00:02&lt;00:10, 13.02it/s] 17%|█▋        | 28/167 [00:02&lt;00:10, 12.86it/s] 18%|█▊        | 30/167 [00:02&lt;00:10, 12.75it/s] 19%|█▉        | 32/167 [00:02&lt;00:10, 12.44it/s] 20%|██        | 34/167 [00:02&lt;00:10, 12.96it/s] 22%|██▏       | 36/167 [00:02&lt;00:10, 12.80it/s] 23%|██▎       | 38/167 [00:03&lt;00:10, 11.88it/s] 24%|██▍       | 40/167 [00:03&lt;00:10, 12.44it/s] 25%|██▌       | 42/167 [00:03&lt;00:09, 12.93it/s] 26%|██▋       | 44/167 [00:03&lt;00:09, 13.31it/s] 28%|██▊       | 46/167 [00:03&lt;00:09, 13.05it/s] 29%|██▊       | 48/167 [00:03&lt;00:09, 13.12it/s] 30%|██▉       | 50/167 [00:03&lt;00:08, 13.20it/s] 31%|███       | 52/167 [00:04&lt;00:08, 12.96it/s] 32%|███▏      | 54/167 [00:04&lt;00:08, 13.34it/s] 34%|███▎      | 56/167 [00:04&lt;00:07, 13.91it/s] 35%|███▍      | 58/167 [00:04&lt;00:08, 13.52it/s] 36%|███▌      | 60/167 [00:04&lt;00:08, 13.13it/s] 37%|███▋      | 62/167 [00:04&lt;00:07, 13.46it/s] 38%|███▊      | 64/167 [00:04&lt;00:07, 13.70it/s] 40%|███▉      | 66/167 [00:05&lt;00:07, 13.32it/s] 41%|████      | 68/167 [00:05&lt;00:07, 12.56it/s] 42%|████▏     | 70/167 [00:05&lt;00:07, 12.55it/s] 43%|████▎     | 72/167 [00:05&lt;00:07, 13.03it/s] 44%|████▍     | 74/167 [00:05&lt;00:06, 13.38it/s] 46%|████▌     | 76/167 [00:05&lt;00:06, 13.36it/s] 47%|████▋     | 78/167 [00:06&lt;00:06, 13.92it/s] 48%|████▊     | 80/167 [00:06&lt;00:06, 13.73it/s] 49%|████▉     | 82/167 [00:06&lt;00:06, 13.33it/s] 50%|█████     | 84/167 [00:06&lt;00:06, 13.07it/s] 51%|█████▏    | 86/167 [00:06&lt;00:06, 12.90it/s] 53%|█████▎    | 88/167 [00:06&lt;00:06, 12.77it/s] 54%|█████▍    | 90/167 [00:06&lt;00:05, 12.94it/s] 55%|█████▌    | 92/167 [00:07&lt;00:05, 13.06it/s] 56%|█████▋    | 94/167 [00:07&lt;00:05, 13.00it/s] 57%|█████▋    | 96/167 [00:07&lt;00:05, 13.23it/s] 59%|█████▊    | 98/167 [00:07&lt;00:05, 13.53it/s] 60%|█████▉    | 100/167 [00:07&lt;00:05, 13.20it/s] 61%|██████    | 102/167 [00:07&lt;00:05, 12.98it/s] 62%|██████▏   | 104/167 [00:08&lt;00:04, 12.83it/s] 63%|██████▎   | 106/167 [00:08&lt;00:04, 13.37it/s] 65%|██████▍   | 108/167 [00:08&lt;00:04, 12.71it/s] 66%|██████▌   | 110/167 [00:08&lt;00:04, 13.70it/s] 67%|██████▋   | 112/167 [00:08&lt;00:04, 13.06it/s] 68%|██████▊   | 114/167 [00:08&lt;00:04, 12.89it/s] 69%|██████▉   | 116/167 [00:08&lt;00:03, 12.77it/s] 71%|███████   | 118/167 [00:09&lt;00:03, 12.68it/s] 72%|███████▏  | 120/167 [00:09&lt;00:03, 12.40it/s] 73%|███████▎  | 122/167 [00:09&lt;00:03, 13.44it/s] 74%|███████▍  | 124/167 [00:09&lt;00:03, 14.26it/s] 75%|███████▌  | 126/167 [00:09&lt;00:02, 14.90it/s] 77%|███████▋  | 128/167 [00:09&lt;00:02, 14.36it/s] 78%|███████▊  | 130/167 [00:09&lt;00:02, 14.37it/s] 79%|███████▉  | 132/167 [00:10&lt;00:02, 13.48it/s] 80%|████████  | 134/167 [00:10&lt;00:02, 13.99it/s] 81%|████████▏ | 136/167 [00:10&lt;00:02, 13.78it/s] 83%|████████▎ | 138/167 [00:10&lt;00:02, 13.11it/s] 84%|████████▍ | 140/167 [00:10&lt;00:02, 12.93it/s] 85%|████████▌ | 142/167 [00:10&lt;00:01, 13.05it/s] 86%|████████▌ | 144/167 [00:11&lt;00:01, 12.88it/s] 87%|████████▋ | 146/167 [00:11&lt;00:01, 12.75it/s] 89%|████████▊ | 148/167 [00:11&lt;00:01, 12.93it/s] 90%|████████▉ | 150/167 [00:11&lt;00:01, 13.31it/s] 91%|█████████ | 152/167 [00:11&lt;00:01, 13.05it/s] 92%|█████████▏| 154/167 [00:11&lt;00:01, 12.88it/s] 93%|█████████▎| 156/167 [00:12&lt;00:00, 11.86it/s] 95%|█████████▍| 158/167 [00:12&lt;00:00, 12.04it/s] 96%|█████████▌| 160/167 [00:12&lt;00:00, 12.17it/s] 97%|█████████▋| 162/167 [00:12&lt;00:00, 12.27it/s] 98%|█████████▊| 164/167 [00:12&lt;00:00, 12.34it/s] 99%|█████████▉| 166/167 [00:12&lt;00:00, 12.39it/s] 99%|█████████▉| 166/167 [00:12&lt;00:00, 12.88it/s]
+  0%|          | 0/167 [00:00&lt;?, ?it/s]  1%|          | 1/167 [00:00&lt;00:18,  9.10it/s]  2%|▏         | 3/167 [00:00&lt;00:18,  9.10it/s]  3%|▎         | 5/167 [00:00&lt;00:16,  9.78it/s]  4%|▎         | 6/167 [00:00&lt;00:17,  9.35it/s]  4%|▍         | 7/167 [00:00&lt;00:16,  9.51it/s]  5%|▍         | 8/167 [00:00&lt;00:17,  9.15it/s]  5%|▌         | 9/167 [00:00&lt;00:17,  8.90it/s]  7%|▋         | 11/167 [00:01&lt;00:17,  9.17it/s]  7%|▋         | 12/167 [00:01&lt;00:17,  8.95it/s]  8%|▊         | 13/167 [00:01&lt;00:16,  9.19it/s]  8%|▊         | 14/167 [00:01&lt;00:16,  9.06it/s] 10%|▉         | 16/167 [00:01&lt;00:16,  9.16it/s] 10%|█         | 17/167 [00:01&lt;00:16,  9.35it/s] 11%|█         | 18/167 [00:01&lt;00:16,  9.07it/s] 11%|█▏        | 19/167 [00:02&lt;00:16,  8.86it/s] 12%|█▏        | 20/167 [00:02&lt;00:16,  8.71it/s] 13%|█▎        | 21/167 [00:02&lt;00:16,  8.60it/s] 14%|█▍        | 23/167 [00:02&lt;00:15,  9.36it/s] 15%|█▍        | 25/167 [00:02&lt;00:14,  9.78it/s] 16%|█▌        | 27/167 [00:02&lt;00:14,  9.53it/s] 17%|█▋        | 28/167 [00:03&lt;00:15,  9.25it/s] 18%|█▊        | 30/167 [00:03&lt;00:14,  9.20it/s] 19%|█▊        | 31/167 [00:03&lt;00:15,  9.00it/s] 20%|█▉        | 33/167 [00:03&lt;00:14,  9.35it/s] 20%|██        | 34/167 [00:03&lt;00:14,  8.95it/s] 21%|██        | 35/167 [00:03&lt;00:14,  8.87it/s] 22%|██▏       | 36/167 [00:03&lt;00:14,  9.07it/s] 23%|██▎       | 38/167 [00:04&lt;00:13,  9.42it/s] 23%|██▎       | 39/167 [00:04&lt;00:14,  8.94it/s] 24%|██▍       | 40/167 [00:04&lt;00:14,  8.79it/s] 25%|██▍       | 41/167 [00:04&lt;00:13,  9.07it/s] 25%|██▌       | 42/167 [00:04&lt;00:14,  8.86it/s] 26%|██▋       | 44/167 [00:04&lt;00:13,  9.33it/s] 27%|██▋       | 45/167 [00:04&lt;00:12,  9.47it/s] 28%|██▊       | 47/167 [00:05&lt;00:12,  9.32it/s] 29%|██▊       | 48/167 [00:05&lt;00:12,  9.27it/s] 29%|██▉       | 49/167 [00:05&lt;00:13,  9.02it/s] 30%|██▉       | 50/167 [00:05&lt;00:13,  8.83it/s] 31%|███       | 52/167 [00:05&lt;00:12,  8.95it/s] 32%|███▏      | 53/167 [00:05&lt;00:12,  8.80it/s] 33%|███▎      | 55/167 [00:06&lt;00:12,  9.07it/s] 34%|███▍      | 57/167 [00:06&lt;00:11,  9.39it/s] 35%|███▍      | 58/167 [00:06&lt;00:11,  9.15it/s] 36%|███▌      | 60/167 [00:06&lt;00:11,  9.44it/s] 37%|███▋      | 61/167 [00:06&lt;00:11,  9.37it/s] 37%|███▋      | 62/167 [00:06&lt;00:11,  9.31it/s] 38%|███▊      | 63/167 [00:06&lt;00:10,  9.47it/s] 38%|███▊      | 64/167 [00:06&lt;00:11,  9.15it/s] 39%|███▉      | 65/167 [00:07&lt;00:11,  8.91it/s] 40%|███▉      | 66/167 [00:07&lt;00:10,  9.18it/s] 40%|████      | 67/167 [00:07&lt;00:10,  9.16it/s] 41%|████      | 68/167 [00:07&lt;00:10,  9.38it/s] 42%|████▏     | 70/167 [00:07&lt;00:10,  9.25it/s] 43%|████▎     | 71/167 [00:07&lt;00:10,  9.01it/s] 43%|████▎     | 72/167 [00:07&lt;00:10,  8.83it/s] 44%|████▎     | 73/167 [00:07&lt;00:10,  8.69it/s] 45%|████▍     | 75/167 [00:08&lt;00:10,  8.86it/s] 46%|████▌     | 76/167 [00:08&lt;00:10,  8.63it/s] 46%|████▌     | 77/167 [00:08&lt;00:10,  8.84it/s] 47%|████▋     | 79/167 [00:08&lt;00:09,  9.48it/s] 48%|████▊     | 80/167 [00:08&lt;00:09,  9.20it/s] 49%|████▊     | 81/167 [00:08&lt;00:09,  8.97it/s] 49%|████▉     | 82/167 [00:08&lt;00:09,  9.21it/s] 50%|█████     | 84/167 [00:09&lt;00:08,  9.54it/s] 51%|█████     | 85/167 [00:09&lt;00:08,  9.52it/s] 52%|█████▏    | 87/167 [00:09&lt;00:08,  9.81it/s] 53%|█████▎    | 89/167 [00:09&lt;00:07,  9.88it/s] 54%|█████▍    | 90/167 [00:09&lt;00:07,  9.71it/s] 54%|█████▍    | 91/167 [00:09&lt;00:08,  9.35it/s] 56%|█████▌    | 93/167 [00:10&lt;00:07,  9.61it/s] 56%|█████▋    | 94/167 [00:10&lt;00:07,  9.69it/s] 57%|█████▋    | 95/167 [00:10&lt;00:07,  9.53it/s] 58%|█████▊    | 97/167 [00:10&lt;00:06, 10.12it/s] 59%|█████▉    | 99/167 [00:10&lt;00:06, 10.07it/s] 60%|██████    | 101/167 [00:10&lt;00:06, 10.23it/s] 62%|██████▏   | 103/167 [00:11&lt;00:06,  9.66it/s] 63%|██████▎   | 105/167 [00:11&lt;00:06,  9.77it/s] 63%|██████▎   | 106/167 [00:11&lt;00:06,  9.47it/s] 64%|██████▍   | 107/167 [00:11&lt;00:06,  9.20it/s] 65%|██████▌   | 109/167 [00:11&lt;00:06,  9.32it/s] 66%|██████▌   | 110/167 [00:11&lt;00:06,  9.45it/s] 67%|██████▋   | 112/167 [00:12&lt;00:05,  9.80it/s] 68%|██████▊   | 114/167 [00:12&lt;00:05, 10.25it/s] 69%|██████▉   | 116/167 [00:12&lt;00:05, 10.00it/s] 71%|███████   | 118/167 [00:12&lt;00:04, 10.50it/s] 72%|███████▏  | 120/167 [00:12&lt;00:04, 10.70it/s] 73%|███████▎  | 122/167 [00:12&lt;00:04, 10.64it/s] 74%|███████▍  | 124/167 [00:13&lt;00:04, 10.44it/s] 75%|███████▌  | 126/167 [00:13&lt;00:03, 10.46it/s] 77%|███████▋  | 128/167 [00:13&lt;00:04,  9.71it/s] 77%|███████▋  | 129/167 [00:13&lt;00:03,  9.76it/s] 78%|███████▊  | 130/167 [00:13&lt;00:03,  9.43it/s] 78%|███████▊  | 131/167 [00:13&lt;00:03,  9.55it/s] 80%|███████▉  | 133/167 [00:14&lt;00:03, 10.52it/s] 81%|████████  | 135/167 [00:14&lt;00:03, 10.34it/s] 82%|████████▏ | 137/167 [00:14&lt;00:02, 11.18it/s] 83%|████████▎ | 139/167 [00:14&lt;00:02, 11.58it/s] 84%|████████▍ | 141/167 [00:14&lt;00:02, 11.62it/s] 86%|████████▌ | 143/167 [00:14&lt;00:02, 11.47it/s] 87%|████████▋ | 145/167 [00:15&lt;00:01, 11.36it/s] 88%|████████▊ | 147/167 [00:15&lt;00:01, 11.29it/s] 89%|████████▉ | 149/167 [00:15&lt;00:01, 11.63it/s] 90%|█████████ | 151/167 [00:15&lt;00:01, 11.88it/s] 92%|█████████▏| 153/167 [00:15&lt;00:01, 12.32it/s] 93%|█████████▎| 155/167 [00:15&lt;00:01, 11.89it/s] 94%|█████████▍| 157/167 [00:16&lt;00:00, 11.45it/s] 95%|█████████▌| 159/167 [00:16&lt;00:00, 10.97it/s] 96%|█████████▋| 161/167 [00:16&lt;00:00, 11.01it/s] 98%|█████████▊| 163/167 [00:16&lt;00:00, 11.42it/s] 99%|█████████▉| 165/167 [00:16&lt;00:00, 11.32it/s] 99%|█████████▉| 166/167 [00:17&lt;00:00,  9.75it/s]
+  0%|          | 0/101 [00:00&lt;?, ?it/s]  3%|▎         | 3/101 [00:00&lt;00:04, 22.40it/s]  6%|▌         | 6/101 [00:00&lt;00:04, 21.81it/s]  9%|▉         | 9/101 [00:00&lt;00:03, 23.95it/s] 12%|█▏        | 12/101 [00:00&lt;00:03, 24.37it/s] 15%|█▍        | 15/101 [00:00&lt;00:03, 24.60it/s] 18%|█▊        | 18/101 [00:00&lt;00:03, 24.72it/s] 21%|██        | 21/101 [00:00&lt;00:03, 24.85it/s] 24%|██▍       | 24/101 [00:00&lt;00:03, 24.88it/s] 27%|██▋       | 27/101 [00:01&lt;00:02, 25.58it/s] 30%|██▉       | 30/101 [00:01&lt;00:02, 25.42it/s] 33%|███▎      | 33/101 [00:01&lt;00:02, 25.26it/s] 36%|███▌      | 36/101 [00:01&lt;00:02, 25.19it/s] 39%|███▊      | 39/101 [00:01&lt;00:02, 25.18it/s] 42%|████▏     | 42/101 [00:01&lt;00:02, 25.72it/s] 45%|████▍     | 45/101 [00:01&lt;00:02, 25.51it/s] 48%|████▊     | 48/101 [00:01&lt;00:02, 25.36it/s] 50%|█████     | 51/101 [00:02&lt;00:01, 25.25it/s] 53%|█████▎    | 54/101 [00:02&lt;00:01, 25.19it/s] 56%|█████▋    | 57/101 [00:02&lt;00:01, 25.12it/s] 59%|█████▉    | 60/101 [00:02&lt;00:01, 25.07it/s] 62%|██████▏   | 63/101 [00:02&lt;00:01, 25.08it/s] 65%|██████▌   | 66/101 [00:02&lt;00:01, 25.03it/s] 68%|██████▊   | 69/101 [00:02&lt;00:01, 25.04it/s] 71%|███████▏  | 72/101 [00:02&lt;00:01, 24.99it/s] 74%|███████▍  | 75/101 [00:03&lt;00:01, 25.01it/s] 78%|███████▊  | 79/101 [00:03&lt;00:00, 26.19it/s] 81%|████████  | 82/101 [00:03&lt;00:00, 25.87it/s] 84%|████████▍ | 85/101 [00:03&lt;00:00, 25.62it/s] 87%|████████▋ | 88/101 [00:03&lt;00:00, 25.45it/s] 90%|█████████ | 91/101 [00:03&lt;00:00, 25.92it/s] 94%|█████████▍| 95/101 [00:03&lt;00:00, 27.47it/s] 97%|█████████▋| 98/101 [00:03&lt;00:00, 26.75it/s] 99%|█████████▉| 100/101 [00:03&lt;00:00, 25.23it/s]
+<br/></div></td></tr></tbody></table></body></html>
