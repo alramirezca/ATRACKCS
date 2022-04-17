@@ -45,10 +45,10 @@ def run_tb(phTb, Tb, area_Tb):
                     utm_local_zone = UTM_LOCAL_ZONE, 
                     path_save = None)
     
-    resume = features_Tracks(sup, encript_index = False, path_save = None)
-    resume.duracion_total =  resume.duracion_total.astype(int)
-    resume.distancia_total =  resume.distancia_total.astype(float)
-    resume.velocidad_promedio =  resume.velocidad_promedio.astype(float)
+    resume = features_Tracks(sup, encrypt_index = False, path_save = None)
+    # resume.duracion_total =  resume.duracion_total.astype(int)
+    # resume.distancia_total =  resume.distancia_total.astype(float)
+    # resume.velocidad_promedio =  resume.velocidad_promedio.astype(float)
     
     return resume
 
@@ -66,47 +66,47 @@ def run_tb_p(phTb, phP, Tb, area_Tb, min_precipitation, area_P):
                     utm_local_zone = UTM_LOCAL_ZONE, 
                     path_save = None)
     
-    resume = features_Tracks(sup, encript_index = False, path_save = None)
-    resume.duracion_total =  resume.duracion_total.astype(int)
-    resume.distancia_total =  resume.distancia_total.astype(float)
-    resume.velocidad_promedio =  resume.velocidad_promedio.astype(float)
+    resume = features_Tracks(sup, encrypt_index = False, path_save = None)
+    # resume.duracion_total =  resume.duracion_total.astype(int)
+    # resume.distancia_total =  resume.distancia_total.astype(float)
+    # resume.velocidad_promedio =  resume.velocidad_promedio.astype(float)
     
     return resume
 
 
 def test_run_tb():
     
-    df = pnd.read_csv("C:/Users/ASUS/Desktop/udea/Prueba_GPM/prueba_test_2/resultados/track_test.csv",
+    df = pnd.read_csv(r"C:/Users/ASUS/Documents/GitHub/atrackcs/test/csv/resultados/track_test.csv",
                                    index_col = ["belong", "id_gdf"], parse_dates = ["time"])
     df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
     df.geometry = df.geometry.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
 
-    df['centroides'] = gpd.GeoSeries.from_wkt(df['centroides'])
-    df.centroides = df.centroides.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
+    df['centroid_'] = gpd.GeoSeries.from_wkt(df['centroid_'])
+    df['centroid_'] = df['centroid_'].apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
 
     expected_tracks = gpd.GeoDataFrame(df, geometry='geometry', crs = 4326)
     
     tracks = run_tb(phTb, 225, 1000)
     tracks.geometry = tracks.geometry.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
-    tracks.centroides = tracks.centroides.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
+    tracks.centroid_ = tracks.centroid_.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
    
     
     assert_frame_equal(tracks.sort_index(),expected_tracks.sort_index(), check_dtype = False)   
     
 def test_run_tb_p(): 
-    df = pnd.read_csv("C:/Users/ASUS/Desktop/udea/Prueba_GPM/prueba_test_2/resultados/track_test_with_p.csv",
+    df = pnd.read_csv(r"C:/Users/ASUS/Documents/GitHub/atrackcs/test/csv/resultados/track_test_with_p.csv",
                                    index_col = ["belong", "id_gdf"], parse_dates = ["time"])
     df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
     df.geometry = df.geometry.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
 
-    df['centroides'] = gpd.GeoSeries.from_wkt(df['centroides'])
-    df.centroides = df.centroides.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
+    df['centroid_'] = gpd.GeoSeries.from_wkt(df['centroid_'])
+    df.centroid_ = df.centroid_.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
 
     expected_tracks = gpd.GeoDataFrame(df, geometry='geometry', crs = 4326)
     
     tracks = run_tb_p(phTb, phP, 225, 1000, 2, 500)
     tracks.geometry = tracks.geometry.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
-    tracks.centroides = tracks.centroides.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
+    tracks.centroid_ = tracks.centroid_.apply(lambda x: loads(re.sub(simpledec, mround, x.wkt)))
    
     
     assert_frame_equal(tracks.sort_index(),expected_tracks.sort_index(), check_dtype = False)   

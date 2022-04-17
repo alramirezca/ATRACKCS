@@ -188,7 +188,7 @@ def distance_centroids(row):
     distance between two points
     """
     try:
-        d = geodesic((row.centroid.y,row.centroid.x),(row.centroids_distance.y,row.centroids_distance.x)).km
+        d = geodesic((row.centroid_.y,row.centroid_.x),(row.centroids_distance.y,row.centroids_distance.x)).km
     except:
         d = np.nan
     return d
@@ -208,7 +208,7 @@ def direction_points(row, mode = "u"):
     
     try:
         #distance vector between the centroids of two points - in x: lon and y: lat
-        distance = [row.centroid.x - row.centroid_2.x, row.centroid.y - row.centroid_2.y]
+        distance = [row.centroid_.x - row.centroid_2.x, row.centroid_.y - row.centroid_2.y]
         
         #Normal Vector
         norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2) #Based on Pitagoras Teorem
@@ -276,7 +276,7 @@ def distance_direction_Tracks(sup):
         #____________________distance___________________________
         track_df = sup.loc[sup["belong"] == track, sup.columns]        
         #Generating centroid to compare (time i + 1) in another column               
-        track_df["centroids_distance"] = track_df["centroid"].shift()
+        track_df["centroids_distance"] = track_df["centroid_"].shift()
         
         #Calculating the distance between centroids (time i and time i + 1)        
         track_df["distance_c"] = track_df.apply(lambda row: distance_centroids(row), axis = 1)
@@ -290,7 +290,7 @@ def distance_direction_Tracks(sup):
         #____________________direction___________________________
 
         #Generating centroid to compare (time i - 1) in another column               
-        track_df["centroid_2"] = track_df["centroid"].shift(-1)
+        track_df["centroid_2"] = track_df["centroid_"].shift(-1)
         
         #Calculating the direction between centroids ((time i and time i - 1))
         track_df["direction_fake"] = track_df.apply(lambda row: direction_points(row, mode = "deg"), axis = 1)
@@ -344,7 +344,7 @@ def distance_direction_Tracks(sup):
     #print ("distances-directions-states of tracks completed")
     return sup
     
-def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encript_index = True,
+def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encrypt_index = True,
                     path_save = None):
     """
     Function for calculating characteristics associated with each tracking
@@ -373,7 +373,7 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encript_index
     
 
     #Encriptying index track and index spot     
-    if encript_index == True:
+    if encrypt_index == True:
         for track_id in NUEVODF.index.levels[1]:
             new_track_id.append(str(uuid.uuid4())[-22:])
         dic_replace_track_id = dict(zip(NUEVODF.index.levels[1].values, new_track_id))
@@ -421,9 +421,9 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encript_index
     #Saving as .csv the results
     #reg_sup.to_csv(pathResultados + "resume_"+str(reg_sup.time.min())[:-7]+"_"+str(reg_sup.time.max())[:-7]+"_"+str(extra_name)+".csv")
     
-    reg_sup.columns = ['time', 'geometry', 'area_tb', 'centroid', 'mean_tb', 'mean_p',
-       'max_p', 'intersection_percentage', 'distance_c', 'direction',
-       'total_duration', 'total_distance', 'mean_velocity']
+    #reg_sup.columns = ['time', 'geometry', 'area_tb', 'centroid', 'mean_tb', 'mean_p',
+    #   'max_p', 'intersection_percentage', 'distance_c', 'direction',
+    #   'total_duration', 'total_distance', 'mean_velocity']
     
     
     reg_sup = TRACKS(reg_sup)

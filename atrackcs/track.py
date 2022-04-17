@@ -280,7 +280,7 @@ def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = Non
         time.sleep(0.01)    
        
     #Transforming plane coordinates to geodesics  coordinates   
-    sup["centroid"] = sup["centroid"].to_crs(4326)
+    sup["centroid_"] = sup["centroid_"].to_crs(4326)
     sup = sup.to_crs(4326) 
     
     #Creating an original index

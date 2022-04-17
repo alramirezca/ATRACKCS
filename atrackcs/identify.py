@@ -187,7 +187,7 @@ def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_z
     gdf = gdf.loc[gdf['area_tb'] >= area_Tb]    
     
     #Calculating centroids
-    gdf["centroid"] = gdf.geometry.centroid
+    gdf["centroid_"] = gdf.geometry.centroid
     gdf.reset_index(inplace = True, drop = True)
         
     print("Spots identification completed")
