@@ -49,6 +49,6 @@ sup = features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precip
 sup = track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = UTM_LOCAL_ZONE,
                 path_save = None)
 
-resume = features_Tracks(sup, encript_index =  False, 
+resume = features_Tracks(sup, 
                          path_save = r"C:\Users\ASUS\Desktop\udea\Prueba_GPM\prueba_test_2\resultados\track_test_with_p.csv")
 

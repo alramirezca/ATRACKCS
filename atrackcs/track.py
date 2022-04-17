@@ -73,7 +73,7 @@ def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = Non
     #Generating tracks
     
     print ("Estimating trajectories: " )
-    for isites, progress in zip(range_sites, tqdm.tqdm(range(len(range_sites)))):
+    for isites, progress in zip(range_sites, tqdm.tqdm(range(len(range_sites)-1))):
         # Checking when the record (spot) has not yet been processed or attaching to a track
         if sup.at[isites, "belong"] == 0:
             try:
@@ -280,7 +280,7 @@ def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = Non
         time.sleep(0.01)    
        
     #Transforming plane coordinates to geodesics  coordinates   
-    sup["centroides"] = sup["centroides"].to_crs(4326)
+    sup["centroid"] = sup["centroid"].to_crs(4326)
     sup = sup.to_crs(4326) 
     
     #Creating an original index

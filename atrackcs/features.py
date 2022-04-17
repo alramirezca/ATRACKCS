@@ -59,7 +59,7 @@ def features_Tb(sup, ds):
 
     print ("Estimating Tb spots features: ")    
     #Estimating Tb features
-    for index_t,_dates, progress in zip(gdf_tb.index,sup.time, tqdm.tqdm(range(len(sup.time)))):
+    for index_t,_dates, progress in zip(gdf_tb.index,sup.time, tqdm.tqdm(range(len(sup.time)-1))):
         _polygon = gdf_tb.geometry.loc[index_t]
         coordinates = np.dstack((_polygon.exterior.coords.xy[0], _polygon.exterior.xy[1]))
         geometries = [{'type': 'Polygon', 'coordinates': [coordinates[0]]}]    
@@ -138,7 +138,7 @@ def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipit
         valid_pixels_precipitation = int((area_P/100.))
         
         
-        for index_t,_dates, progress in zip(gdf_tb.index,sup.time,tqdm.tqdm(range(len(sup.time)))):
+        for index_t,_dates, progress in zip(gdf_tb.index,sup.time,tqdm.tqdm(range(len(sup.time)-1))):
             _polygon = gdf_tb.geometry.loc[index_t]
             coordinates = np.dstack((_polygon.exterior.coords.xy[0], _polygon.exterior.xy[1]))
             geometries = [{'type': 'Polygon', 'coordinates': [coordinates[0]]}]
@@ -176,7 +176,7 @@ def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipit
 
 #________________Trajectories
     
-def distance_centroides(row):
+def distance_centroids(row):
     """
      Function to estimate the distance between two points.
 
@@ -188,7 +188,7 @@ def distance_centroides(row):
     distance between two points
     """
     try:
-        d = geodesic((row.centroides.y,row.centroides.x),(row.centroides_distancia.y,row.centroides_distancia.x)).km
+        d = geodesic((row.centroid.y,row.centroid.x),(row.centroids_distance.y,row.centroids_distance.x)).km
     except:
         d = np.nan
     return d
@@ -208,7 +208,7 @@ def direction_points(row, mode = "u"):
     
     try:
         #distance vector between the centroids of two points - in x: lon and y: lat
-        distance = [row.centroides.x - row.centroides_2.x, row.centroides.y - row.centroides_2.y]
+        distance = [row.centroid.x - row.centroid_2.x, row.centroid.y - row.centroid_2.y]
         
         #Normal Vector
         norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2) #Based on Pitagoras Teorem
@@ -261,8 +261,8 @@ def distance_direction_Tracks(sup):
     """
     
     #Making new columns
-    sup["distancia"] = None; contador = 0
-    sup["direccion"] = None; sup["u"] = None; sup["v"] = None
+    sup["distance_c"] = None; contador = 0
+    sup["direction"] = None; sup["u"] = None; sup["v"] = None
     sup["estado"] = None;
     sup["estado_porcentaje"] = None
 
@@ -271,38 +271,38 @@ def distance_direction_Tracks(sup):
     #Estimating distance and direction between two points   
     
     print("Estimating distance and direction between geometrics centroids: ")
-    for track, progress in zip(tracks, tqdm.tqdm(range(len_track))):
+    for track, progress in zip(tracks, tqdm.tqdm(range(len_track-1))):
         
         #____________________distance___________________________
         track_df = sup.loc[sup["belong"] == track, sup.columns]        
         #Generating centroid to compare (time i + 1) in another column               
-        track_df["centroides_distancia"] = track_df["centroides"].shift()
+        track_df["centroids_distance"] = track_df["centroid"].shift()
         
         #Calculating the distance between centroids (time i and time i + 1)        
-        track_df["distancia"] = track_df.apply(lambda row: distance_centroides(row), axis = 1)
+        track_df["distance_c"] = track_df.apply(lambda row: distance_centroids(row), axis = 1)
         
         #Obtaining the ids of the centroids (spots) that were obtained.
         index_track_distancia = track_df.index    
         
         #Replacing the obtained distance values in the original Dataframe
-        sup.loc[index_track_distancia, "distancia"] = track_df["distancia"]
+        sup.loc[index_track_distancia, "distance_c"] = track_df["distance_c"]
         
         #____________________direction___________________________
 
         #Generating centroid to compare (time i - 1) in another column               
-        track_df["centroides_2"] = track_df["centroides"].shift(-1)
+        track_df["centroid_2"] = track_df["centroid"].shift(-1)
         
         #Calculating the direction between centroids ((time i and time i - 1))
-        track_df["direccion_fake"] = track_df.apply(lambda row: direction_points(row, mode = "deg"), axis = 1)
+        track_df["direction_fake"] = track_df.apply(lambda row: direction_points(row, mode = "deg"), axis = 1)
         track_df["u_fake"] = track_df.apply(lambda row: direction_points(row, mode = "u"), axis = 1)
         track_df["v_fake"] = track_df.apply(lambda row: direction_points(row, mode = "v"), axis = 1)
 
         #Aligning the Dataframe so that the calculated direction corresponds to time i + 1
-        track_df["direccion"] = track_df["direccion_fake"].shift(1)
+        track_df["direction"] = track_df["direction_fake"].shift(1)
         track_df["u"] = track_df["u_fake"].shift(1)
         track_df["v"] = track_df["v_fake"].shift(1)
 
-        del track_df["direccion_fake"]; del track_df["v_fake"]; del track_df["u_fake"]
+        del track_df["direction_fake"]; del track_df["v_fake"]; del track_df["u_fake"]
                
         #Generating qualitative and quantitative information on the growth or decrease of the spot based on last state
         track_df["estado"] = np.where(track_df["area_tb"].diff() > 0, 'CRECIENDO', 'DECRECIENDO')
@@ -321,7 +321,7 @@ def distance_direction_Tracks(sup):
         
         #Replacing the obtained values of direction (degrees) in the original dataframe
         index_track_direccion = track_df.index    
-        sup.loc[index_track_direccion, "direccion"] = track_df["direccion"]   
+        sup.loc[index_track_direccion, "direction"] = track_df["direction"]   
         sup.loc[index_track_direccion, "u"] = track_df["u"]   
         sup.loc[index_track_direccion, "v"] = track_df["v"]   
         
@@ -335,8 +335,8 @@ def distance_direction_Tracks(sup):
         #Progress bar
         time.sleep(0.01)     
 
-    sup.distancia = sup.distancia.astype(float)
-    sup.direccion = sup.direccion.astype(float)
+    sup.distance_c = sup.distance_c.astype(float)
+    sup.direction = sup.direction.astype(float)
     sup.u = sup.u.astype(float)
     sup.v = sup.v.astype(float)
 
@@ -398,8 +398,8 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encript_index
     
     #Attaching to the dataframe total duration and total distance for each spot. Each spot 
     #has the register of the features of his own track
-    reg_sup["duracion_total"] = None
-    reg_sup["distancia_total"] = None
+    reg_sup["total_duration"] = None
+    reg_sup["total_distance"] = None
     
     count_df = reg_sup_res.groupby(by = [reg_sup_res.belong]).count()
     sum_df = reg_sup_res.groupby(by = [reg_sup_res.belong]).sum()
@@ -407,20 +407,25 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encript_index
     for _b in count_df.index: 
     
         count_value = count_df.loc[_b,"id_gdf"]
-        sum_value = sum_df.loc[_b,"distancia"]
+        sum_value = sum_df.loc[_b,"distance_c"]
 
-        reg_sup.loc[_b, "duracion_total"] = count_value
-        reg_sup.loc[_b, "distancia_total"] = sum_value
+        reg_sup.loc[_b, "total_duration"] = count_value
+        reg_sup.loc[_b, "total_distance"] = sum_value
 
     #Estimating track mean velocity      
-    reg_sup['velocidad_promedio'] = reg_sup["distancia_total"]/reg_sup["duracion_total"]
+    reg_sup['mean_velocity'] = reg_sup["total_distance"]/reg_sup["total_duration"]
     
     #Leaving only the tracks based on initial_time_hour
-    reg_sup = reg_sup[reg_sup['duracion_total'] > initial_time_hour]
+    reg_sup = reg_sup[reg_sup['total_duration'] > initial_time_hour]
 
     #Saving as .csv the results
     #reg_sup.to_csv(pathResultados + "resume_"+str(reg_sup.time.min())[:-7]+"_"+str(reg_sup.time.max())[:-7]+"_"+str(extra_name)+".csv")
- 
+    
+    reg_sup.columns = ['time', 'geometry', 'area_tb', 'centroid', 'mean_tb', 'mean_p',
+       'max_p', 'intersection_percentage', 'distance_c', 'direction',
+       'total_duration', 'total_distance', 'mean_velocity']
+    
+    
     reg_sup = TRACKS(reg_sup)
     
     if path_save is None:

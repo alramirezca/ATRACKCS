@@ -160,3 +160,23 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = None):
         raise FileNotFoundError("There must be at least a valid path for Tb data.")
     return ds
 
+def plot_folium(resume, location):
+    m = folium.Map(location=[5, -73.94], zoom_start=5, tiles='CartoDB positron')
+    
+    df = resume.reset_index()
+    
+    for i in df.belong.unique():
+        xx = sup.loc[df.belong == i].reset_index()
+        for idn, r in xx.iterrows():
+            #without simplifying the representation of each borough, the map might not be displayed
+            #sim_geo = gpd.GeoSeries(r['geometry'])
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j,
+                                  style_function=lambda x: {'fillColor': 'orange'})
+            folium.Popup(r.index).add_to(geo_j)
+            folium.Marker(location=[r['centroid'].y, r['centroid'].x], popup='track: {} <br> id_track: {} <br> id_gdf: {} <br> area[km2]: {} dirección: {} <br> distancia[km]: {}  <br> tiempo {} <br>'.format(r['belong'], idn ,r["id_gdf"] , r['area_tb'], r["direction"], round(r["total_distance"],1) ,r['time'])).add_to(m)
+            geo_j.add_to(m)
+        
+
+            m.save(pathResultados+'map_tb225_dur6hr_MAM2019.html')
