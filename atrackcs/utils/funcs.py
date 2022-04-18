@@ -178,6 +178,23 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = 0, utc_local_sign = "mi
     return ds
 
 
+def readTRACKS(path):
+    """
+    function for reading tracks results. 
+
+    Inputs:
+    path: Path where the tracks results is located.
+        
+    Outputs:
+    GeoDataFrame with the tracks and MCS.
+    """
+    
+    df = pd.read_csv(path, index_col = ["belong", "id_gdf"], parse_dates = ["time"])
+    df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
+    df['centroid_'] = gpd.GeoSeries.from_wkt(df['centroid_'])
+    df = gpd.GeoDataFrame(df, geometry='geometry', crs = 4326)
+    return df
+
 def plot_folium(resume, location, path_save):
     m = folium.Map(location=location, zoom_start=5, tiles='CartoDB positron')
     
@@ -193,10 +210,10 @@ def plot_folium(resume, location, path_save):
                                   style_function=lambda x: {'fillColor': 'orange'})
             folium.Popup(r.index).add_to(geo_j)
             try: #Tb and P methodlogy
-                folium.Marker(location=[r['centroid_'].y, r['centroid_'].x], popup='id_track: {} <br> id_msc: {} <br> hour_mcs: {} <br> time: {} <br> area[km2]: {} <br> distance_traveled[km]: {} <br> direction[°]: {} <br> intersection_percentage[%]: {} <br> mean_tb[K]: {} <br> mean_p[mm/h]: {} <br> total_distance_traveled[km]: {} <br> total_duration[h]: {} <br>'.format(r['belong'], r["id_gdf"], idn, r["time"], round(r['area_tb'],1), round(r["distance_c"],1), r["direction"],  r["intersection_percentage"], round(r["mean_tb"],1), round(r["mean_pp"],1), round(r["total_distance"],1), r["total_duration"])).add_to(m)
+                folium.Marker(location=[r['centroid_'].y, r['centroid_'].x], popup='id_track: {} <br> id_mcs: {} <br> hour_mcs: {} <br> time: {} <br> area[km2]: {} <br> distance_traveled[km]: {} <br> direction[°]: {} <br> intersection_percentage[%]: {} <br> mean_tb[K]: {} <br> mean_p[mm/h]: {} <br> total_distance_traveled[km]: {} <br> total_duration[h]: {} <br>'.format(r['belong'], r["id_gdf"], idn, r["time"], round(r['area_tb'],1), round(r["distance_c"],1), r["direction"],  r["intersection_percentage"], round(r["mean_tb"],1), round(r["mean_pp"],1), round(r["total_distance"],1), r["total_duration"])).add_to(m)
                 extra_name = "Tb_P_"
             except: #Tb methodlogy
-                folium.Marker(location=[r['centroid_'].y, r['centroid_'].x], popup='id_track: {} <br> id_msc: {} <br> hour_mcs: {} <br> time: {} <br> area[km2]: {} <br> distance_traveled[km]: {} <br> direction[°]: {} <br> intersection_percentage[%]: {} <br> mean_tb[K]: {} <br> total_distance_traveled[km]: {} <br> total_duration[h]: {} <br>'.format(r['belong'], r["id_gdf"], idn, r["time"], round(r['area_tb'],1), round(r["distance_c"],1), r["direction"],  r["intersection_percentage"], round(r["mean_tb"],1), round(r["total_distance"],1), r["total_duration"])).add_to(m)            
+                folium.Marker(location=[r['centroid_'].y, r['centroid_'].x], popup='id_track: {} <br> id_mcs: {} <br> hour_mcs: {} <br> time: {} <br> area[km2]: {} <br> distance_traveled[km]: {} <br> direction[°]: {} <br> intersection_percentage[%]: {} <br> mean_tb[K]: {} <br> total_distance_traveled[km]: {} <br> total_duration[h]: {} <br>'.format(r['belong'], r["id_gdf"], idn, r["time"], round(r['area_tb'],1), round(r["distance_c"],1), r["direction"],  r["intersection_percentage"], round(r["mean_tb"],1), round(r["total_distance"],1), r["total_duration"])).add_to(m)            
                 extra_name = "Tb_"
             geo_j.add_to(m)
         
@@ -204,4 +221,9 @@ def plot_folium(resume, location, path_save):
     max_time = str(resume.time.max())[:-6].replace("-","_").replace(" ","_")
     path_result = path_save+'map_'+extra_name+min_time+"_"+max_time+".html"
     m.save(path_result)
-    return webbrowser.open(path_result)
+    try:
+        webbrowser.open(path_result)
+    except:
+        pass
+    
+    return path_result

@@ -198,8 +198,8 @@ def direction_points(row, mode = "u"):
     Function to estimate the direction between two georreferenced points.
     
     Inputs:
-    row: Geodataframe containing the shift of the storm at time t (centroids)
-    and the storm at time t+1 (centroids_2)
+    row: Geodataframe containing the shift of the storm at time t (centroid_)
+    and the storm at time t+1 (centroid_2)
         
     Outputs: The output is in function of the mode
     deg: direction in degrees between the two points
@@ -344,7 +344,7 @@ def distance_direction_Tracks(sup):
     #print ("distances-directions-states of tracks completed")
     return sup
     
-def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encrypt_index = True,
+def features_Tracks(sup, initial_time_hour = 0, encrypt_index = True,
                     path_save = None):
     """
     Function for calculating characteristics associated with each tracking
@@ -416,8 +416,11 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encrypt_index
     reg_sup['mean_velocity'] = reg_sup["total_distance"]/reg_sup["total_duration"]
     
     #Leaving only the tracks based on initial_time_hour
-    reg_sup = reg_sup[reg_sup['total_duration'] > initial_time_hour]
-
+    reg_sup = reg_sup.reset_index()
+    reg_sup = reg_sup[reg_sup['total_duration'] > initial_time_hour].sort_index()
+    reg_sup = reg_sup.set_index(["belong", "id_gdf"])
+    reg_sup = reg_sup.sort_index()
+    
     #Saving as .csv the results
     #reg_sup.to_csv(pathResultados + "resume_"+str(reg_sup.time.min())[:-7]+"_"+str(reg_sup.time.max())[:-7]+"_"+str(extra_name)+".csv")
     
@@ -426,18 +429,29 @@ def features_Tracks(sup, initial_time_hour = 0, extra_name = None, encrypt_index
     #   'total_duration', 'total_distance', 'mean_velocity']
     
     
-    reg_sup = TRACKS(reg_sup)
+    reg_sup_ = TRACKS(reg_sup)
     
     if path_save is None:
         pass
     else:
         try:
-            reg_sup.save(path_save)
+            #Saving as .csv the results
+            
+            min_time = str(reg_sup.time.min())[:-6].replace("-","_").replace(" ","_")
+            max_time = str(reg_sup.time.max())[:-6].replace("-","_").replace(" ","_")
+            
+            if 'max_pp' in reg_sup.columns:
+                extra_name = "Tb_P_"
+            else:
+                extra_name = "Tb_"
+            
+            path_result = path_save+'resume_'+extra_name+min_time+"_"+max_time+".csv"
+            #print(path_result)
+            reg_sup.to_csv(path_result)
         except:
             raise FileNotFoundError("No such file or directory: " + str(path_save))
        
- 
-    return reg_sup.data
+    return reg_sup
 
 
 

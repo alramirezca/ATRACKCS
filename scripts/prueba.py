@@ -54,7 +54,7 @@ sup = track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = U
                 path_save = None)
 
 resume = features_Tracks(sup, encrypt_index = True,
-                         path_save = None)
+                         path_save = r"C:\Users\ASUS\Documents\GitHub\atrackcs\notebooks")
 
 funcs.plot_folium(resume, location = [5, -73.94], path_save = r"C:\Users\ASUS\Desktop\udea/")
 
@@ -74,8 +74,8 @@ sup = features_Tb(sup, ds)
 sup = track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = UTM_LOCAL_ZONE,
                 path_save = None)
 
-resume = features_Tracks(sup, encrypt_index = True,
-                         path_save = None)
+resume = features_Tracks(sup, encrypt_index = True, initial_time_hour = 4,
+                         path_save = r"C:\Users\ASUS\Documents\GitHub\atrackcs\notebooks\1_output_data/")
 
 funcs.plot_folium(resume, location = [5, -73.94], path_save = r"C:\Users\ASUS\Desktop\udea/")
 
