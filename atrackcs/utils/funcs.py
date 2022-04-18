@@ -24,12 +24,14 @@ import uuid
 import tqdm
 import time
 import warnings
+import folium
+import webbrowser
 warnings.filterwarnings("ignore")
 
 
 #___________________________________Functions______________________________________________________
 
-def readNC(pathTb = None, pathP = None, utc_local_hour = None):
+def readNC(pathTb = None, pathP = None, utc_local_hour = 0, utc_local_sign = "minus"):
     """
     Function for reading and resampling the Tb and P DataArrays. 
     The spatial resampling is 0.1° - lineal interpolation.
@@ -87,8 +89,15 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = None):
             
             #Converting the UTC to local hour
             datex = ds.time.coords.to_index()
+            
             #Replacing the datetimeindex based on UTC_LOCAL_HOUR
-            datedt = datex.to_pydatetime() - timedelta(hours=utc_local_hour)
+            if utc_local_sign == "minus":
+                datedt = datex.to_pydatetime() - timedelta(hours=utc_local_hour)
+            elif utc_local_sign == "plus":
+                datedt = datex.to_pydatetime() + timedelta(hours=utc_local_hour)
+            else:
+                raise TypeError("You must type a valid parameter for utc_local_sign: minus, plus or local. If you use local please enter tc_local_hour = 0")
+
             dates_64 = [np.datetime64(row) for row in datedt]
             ds =  ds.assign_coords({"time": dates_64})
                 
@@ -131,8 +140,16 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = None):
                        
             #Converting the UTC to local hour
             datex = ds.time.coords.to_index()
+            
             #Replacing the datetimeindex based on UTC_LOCAL_HOUR
-            datedt = datex.to_pydatetime() - timedelta(hours=utc_local_hour)
+            if utc_local_sign == "minus":
+                datedt = datex.to_pydatetime() - timedelta(hours=utc_local_hour)
+            elif utc_local_sign == "plus":
+                datedt = datex.to_pydatetime() + timedelta(hours=utc_local_hour)
+            elif utc_local_sign == "local":
+                datedt = datex.to_pydatetime() + timedelta(hours=utc_local_hour)
+            else:
+                raise TypeError("You must type a valid parameter for utc_local_sign: minus, plus or local. If you use local please enter tc_local_hour = 0")
             dates_64 = [np.datetime64(row) for row in datedt]
             ds =  ds.assign_coords({"time": dates_64})
                 
@@ -160,23 +177,31 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = None):
         raise FileNotFoundError("There must be at least a valid path for Tb data.")
     return ds
 
-def plot_folium(resume, location):
-    m = folium.Map(location=[5, -73.94], zoom_start=5, tiles='CartoDB positron')
+
+def plot_folium(resume, location, path_save):
+    m = folium.Map(location=location, zoom_start=5, tiles='CartoDB positron')
     
     df = resume.reset_index()
     
     for i in df.belong.unique():
-        xx = sup.loc[df.belong == i].reset_index()
-        for idn, r in xx.iterrows():
-            #without simplifying the representation of each borough, the map might not be displayed
-            #sim_geo = gpd.GeoSeries(r['geometry'])
+        tracks = df.loc[df.belong == i].reset_index()
+        for idn, r in tracks.iterrows():
+
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j,
                                   style_function=lambda x: {'fillColor': 'orange'})
             folium.Popup(r.index).add_to(geo_j)
-            folium.Marker(location=[r['centroid'].y, r['centroid'].x], popup='track: {} <br> id_track: {} <br> id_gdf: {} <br> area[km2]: {} dirección: {} <br> distancia[km]: {}  <br> tiempo {} <br>'.format(r['belong'], idn ,r["id_gdf"] , r['area_tb'], r["direction"], round(r["total_distance"],1) ,r['time'])).add_to(m)
+            try: #Tb and P methodlogy
+                folium.Marker(location=[r['centroid_'].y, r['centroid_'].x], popup='id_track: {} <br> id_msc: {} <br> hour_mcs: {} <br> time: {} <br> area[km2]: {} <br> distance_traveled[km]: {} <br> direction[°]: {} <br> intersection_percentage[%]: {} <br> mean_tb[K]: {} <br> mean_p[mm/h]: {} <br> total_distance_traveled[km]: {} <br> total_duration[h]: {} <br>'.format(r['belong'], r["id_gdf"], idn, r["time"], round(r['area_tb'],1), round(r["distance_c"],1), r["direction"],  r["intersection_percentage"], round(r["mean_tb"],1), round(r["mean_pp"],1), round(r["total_distance"],1), r["total_duration"])).add_to(m)
+                extra_name = "Tb_P_"
+            except: #Tb methodlogy
+                folium.Marker(location=[r['centroid_'].y, r['centroid_'].x], popup='id_track: {} <br> id_msc: {} <br> hour_mcs: {} <br> time: {} <br> area[km2]: {} <br> distance_traveled[km]: {} <br> direction[°]: {} <br> intersection_percentage[%]: {} <br> mean_tb[K]: {} <br> total_distance_traveled[km]: {} <br> total_duration[h]: {} <br>'.format(r['belong'], r["id_gdf"], idn, r["time"], round(r['area_tb'],1), round(r["distance_c"],1), r["direction"],  r["intersection_percentage"], round(r["mean_tb"],1), round(r["total_distance"],1), r["total_duration"])).add_to(m)            
+                extra_name = "Tb_"
             geo_j.add_to(m)
         
-
-            m.save(pathResultados+'map_tb225_dur6hr_MAM2019.html')
+    min_time = str(resume.time.min())[:-6].replace("-","_").replace(" ","_")
+    max_time = str(resume.time.max())[:-6].replace("-","_").replace(" ","_")
+    path_result = path_save+'map_'+extra_name+min_time+"_"+max_time+".html"
+    m.save(path_result)
+    return webbrowser.open(path_result)

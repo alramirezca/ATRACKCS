@@ -85,41 +85,41 @@ def polygon_identify(data_id, variable):
     return gdf      
 
 def thresholds(func):
-    def valid_thresholds(data, variables, Tb, area_Tb, utm_local_zone, path_save):
+    def valid_thresholds(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save):
         if Tb not in range(200,241):
             raise ValueError("You must enter a value of Tb between 200 K - 240 K")
-        if variables not in ["Both", "Tb"]:
-            raise TypeError("You must type a valid parameter for variables: Tb or Both")
+        if detect_scheme not in ["Both", "Tb"]:
+            raise TypeError("You must type a valid parameter for detect_scheme: Tb or Both")
         if not area_Tb >999:
             raise ValueError("You must enter an area_Tb greater or equal than 1000 km2")
         if not isinstance(utm_local_zone, int):
             raise ValueError("You must enter a valid UTM local zone")
         if path_save == None:
             pass
-        return func(data, variables, Tb, area_Tb, utm_local_zone, path_save)
+        return func(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save)
     return valid_thresholds
 
 def confirm_P_data(func):
-    def valid_variables(data, variables, Tb, area_Tb, utm_local_zone, path_save):
-        if variables == "Both":  
+    def valid_variables(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save):
+        if detect_scheme == "Both":  
             try:
                 data["P"]
             except:
-                raise TypeError("There is not P data, please change the parameter variables for Tb")
-        return func(data, variables, Tb, area_Tb, utm_local_zone, path_save)
+                raise TypeError("There is not P data, please change the parameter detect_scheme for Tb")
+        return func(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save)
     return valid_variables
            
 
 @confirm_P_data
 @thresholds
-def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_zone = None, path_save = None):
+def detect_mcs(data, detect_scheme = "Both", Tb = 225, area_Tb = 2000, utm_local_zone = None, path_save = None):
     """
-    Function for identifying the spots, in a time step, based on the methodology
+    Function for detect the spots, in a time step, based on the methodology
     of brightness temperature and precipitation association.
  
     Inputs
     data = DataArray of the variables
-    variables: Methodology of association "Tb" or "Both":Tb and P. 
+    detect_scheme: Scheme of association "Tb" or "Both":Tb and P. 
     If "Tb" the spots area are delimited by brightness temperature cold cloud top
     Elif "Both" the spots area are delimited by brightness temperature cold cloud top and
     precipitation threshold in each spot
@@ -140,7 +140,7 @@ def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_z
     dataf = data.to_dataframe()
 
     #Methodology Tb
-    if variables == "Tb":
+    if detect_scheme == "Tb":
         #Masking the dataframe except for the outline of the spots based
         #on limited threshold cold cloud top 
         dataf.loc[dataf["Tb"]<=Tb] = 1
@@ -150,7 +150,7 @@ def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_z
         datax = dataf.to_xarray()["Tb"]; del dataf
 
     #Methodology Tb and P        
-    elif variables =='Both':  
+    elif detect_scheme =='Both':  
         #Masking the dataframe except for the outline of the spots based
         #on limited threshold cold cloud top         
         dataf.loc[dataf["Tb"]<=Tb] = 1
@@ -190,7 +190,7 @@ def identify_mcs(data, variables = "Both", Tb = 225, area_Tb = 2000, utm_local_z
     gdf["centroid_"] = gdf.geometry.centroid
     gdf.reset_index(inplace = True, drop = True)
         
-    print("Spots identification completed")
+    print("Spots detection completed")
     
     gdf = MCS(gdf)
 
