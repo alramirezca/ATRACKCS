@@ -250,7 +250,7 @@ pathload = OUTDIR + "resume_Tb_2001_12_29_19_2001_12_31_07.csv"
 
 tracks_l = funcs.readTRACKS(pathload)
 
-print ("total tracks that last less than 10 hours : " + 
+print ("total tracks detected " + 
        str(len(tracks_l.index.levels[0])) + " and total MCS detected: " 
        + str(len(tracks_l.index.levels[1])))
 
