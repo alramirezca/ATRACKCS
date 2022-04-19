@@ -6,15 +6,10 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 The detection of the MCS is from the cold top of the clouds, based on magnitude threshold, and the generation of an approximate horizontal area from the convex hull. The tracking in time and space is done by overlapping areas. The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or SCM detection need.
 
+
+| ![](joss/resume_atrackcs.png) |
+
 ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
-
-## Documentation
-
-
-
-## Example use case
-
-
 
 ## Main Dependencies
 
@@ -38,9 +33,6 @@ ATRACKCS is intended for researchers and students who are interested in the char
 Recommend building the Python environment using [Anaconda](https://www.anaconda.com/distribution/).
 
 ### Create conda environment using environment file
-
-This way will install the optional `folium` package and allow you to run
-the notebook examples.
 
 After Anaconda installation, git clone this repository:
 
@@ -72,8 +64,6 @@ Finally install ATRACKCS using:
 ```
 pip install -e .
 ```
-
-
 ## tests
 
 To validate installation, issue a new Python session and run
@@ -84,30 +74,17 @@ import atrackcs
 
 If nothing prints out, installation is successful.
 
-
-
 ## Inventory
 
-* docs: readthedocs documentation.
 * atrackcs: core module functions.
 * notebooks: a series of jupyter notebooks illustrating the major functionalities of the package.
-* scripts: example computation scripts. Can be used as templates to quickly develop your own working scripts.
-
+* scripts: example computation scripts. 
 
 ## Changelog
 
-### v1
-
-Minor fixes:
-
-* fix a bug in latitudinal range filtering when data cover both of the Northern and Southern Hemispheres.
-* more robust handling of zonally cyclic data.
-* (related to a change in v3.3.0) a better way to prevent potential [matplotlib memory leaking](https://github.com/matplotlib/matplotlib/issues/20490).
-
-
 ### v1.0
 
-* initial upload. Can perform MSC detection and tracKing through time and space.
+* initial upload. Can perform MSC detection and tracking through time and space.
 
 ## Contributing
 
