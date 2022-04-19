@@ -24,7 +24,7 @@ ATRACKCS is intended for researchers and students who are interested in the char
 * shapely (developed in 1.8.0 in py3)
 * rioxarray (developed in 0.9.1 in py3)
 * rasterio (developed in 1.2.1 in py3)
-* folium (optional, only used for plotting in 0.12.1.post1 in py3)
+* folium (developed in in 0.12.1.post1 in py3)
 * OS: Linux or Windows, may work in MAC.
 
 ## Installation
@@ -78,6 +78,7 @@ If nothing prints out, installation is successful.
 * atrackcs: core module functions.
 * notebooks: a series of jupyter notebooks illustrating the major functionalities of the package.
 * scripts: example computation scripts. 
+* test: integration tests for detects schemes.
 
 ## Changelog
 
@@ -85,12 +86,7 @@ If nothing prints out, installation is successful.
 
 * initial upload. Can perform MSC detection and tracking through time and space.
 
-## Contributing
-
-We welcome contributions from the community. Please create a fork of the project on GitHub
-and use a pull request to propose your changes. 
-
-## use cases
+## Use in researchs
 
 * Spatio-temporal Characterization of Mesoscale Convective Systems over Northern South America. In AGU Fall Meeting 2021.
 [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/874852).
@@ -99,7 +95,3 @@ and use a pull request to propose your changes.
 [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia).
 [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
 
-
-## Getting help
-
-Please post issues on the project GitHub page.
