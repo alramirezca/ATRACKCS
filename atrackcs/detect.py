@@ -3,6 +3,12 @@
 identifying mesoscale convective systems functions
 @authors: Álvaro Ramírez Cardona (alramirezca@unal.edu.co)
           Vanessa Robledo Delgado (vanessa.robledo@udea.edu.co)
+          
+Bibliography
+* Feng, Z., Leung, L. R., Liu, N., Wang, J., Houze, R. A., Li, J., Hardin, J. C., Chen, D., & Guo, J. (2021). A Global High‐resolution Mesoscale Convective System Database using Satellite‐derived Cloud Tops, Surface Precipitation, and Tracking. Journal of Geophysical Research: Atmospheres. https://doi.org/10.1029/2020jd034202
+* Li, J., Feng, Z., Qian, Y., & Leung, L. R. (2020). A high-resolution unified observational data product of mesoscale convective systems and isolated deep convection in the United States for 2004–2017. Earth System Science Data Discussions, October, 1–48. https://doi.org/10.5194/essd-2020-151
+* Liu, W., Cook, K. H., & Vizy, E. K. (2019). The role of mesoscale convective systems in the diurnal cycle of rainfall and its seasonality over sub-Saharan Northern Africa. Climate Dynamics, 52(1–2), 729–745. https://doi.org/10.1007/s00382-018-4162-y
+* Vizy, E. K., & Cook, K. H. (2018). Mesoscale convective systems and nocturnal rainfall over the West African Sahel: role of the Inter-tropical front. Climate Dynamics, 50(1–2), 587–614. https://doi.org/10.1007/s00382-017-3628-7          
 """
 #Libraries
 import xarray as xr  
@@ -34,15 +40,16 @@ class MCS():
 
 def polygon_identify(data_id, variable):
     """
-    Function to draw polygons associated to each P or Tb spot; the polygon delimitation 
-    is from the Convex Hull. This function execute inside the function identify_msc2. 
+    Function to estimate polygons (convexhull) associated to the
+    interest variable (Tb or P). This function execute inside the 
+    function detect_mcs().
     
     Inputs:
-    data_id = DataArray associated with each variable: P or Tb
-    variable = string name variable: "Tb" or "P"
+    * data_id: DataFrame, with data associated to the detect scheme. 
+    * variable: str (Tb or P), variable's name for estimating the polygons.
     
     Outputs:
-    Geodataframe with the polygons associated to the P and tb spots.
+    * Geodataframe, with the estimated polygons.
     """
     #structure that determines which elements are neighbors to each pixel.
     structure = ndimage.generate_binary_structure(2,2)
@@ -60,7 +67,7 @@ def polygon_identify(data_id, variable):
         #replacing the values generated in the original Datarray
         data_id.loc[dict(time = step.values)] = blobs
             
-    #___________________Polygon generation of the spots______________________________
+    #_________________Spots's polygon generation______________________________
         
     #Datarray to Dataframe
     df = data_id.to_dataframe().reset_index()
@@ -85,6 +92,9 @@ def polygon_identify(data_id, variable):
     return gdf      
 
 def thresholds(func):
+    """
+    Decorator for checking the thresholds and the type of enter data in detect_mcs()
+    """
     def valid_thresholds(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save):
         if Tb not in range(200,241):
             raise ValueError("You must enter a value of Tb between 200 K - 240 K")
@@ -100,6 +110,9 @@ def thresholds(func):
     return valid_thresholds
 
 def confirm_P_data(func):
+    """
+    Decorator for checking and blocking the use of P data when the detect_scheme is Tb
+    """
     def valid_variables(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save):
         if detect_scheme == "Both":  
             try:
@@ -109,29 +122,29 @@ def confirm_P_data(func):
         return func(data, detect_scheme, Tb, area_Tb, utm_local_zone, path_save)
     return valid_variables
            
-
 @confirm_P_data
 @thresholds
 def detect_mcs(data, detect_scheme = "Both", Tb = 225, area_Tb = 2000, utm_local_zone = None, path_save = None):
     """
-    Function for detect the spots, in a time step, based on the methodology
-    of brightness temperature and precipitation association.
- 
+    Function for detecting MCS, in a time step, based on the detect scheme 
+    and Tb criteria selection.
+
     Inputs
-    data = DataArray of the variables
-    detect_scheme: Scheme of association "Tb" or "Both":Tb and P. 
-    If "Tb" the spots area are delimited by brightness temperature cold cloud top
-    Elif "Both" the spots area are delimited by brightness temperature cold cloud top and
-    precipitation threshold in each spot
-
-
+    * data = Dataset, with the data resulting from the process funcs.readNC().
+    * detect_scheme: str(Tb, Both), association scheme. If "Tb" the MCS area are 
+    delimited by Tb cold cloud top. Elif "Both" the MCS area are delimited
+    by Tb cold cloud top and precipitation criteria selection.
+    * utm_local_zone: int, is needed for converting the WGS geodetic coordinate system 
+    * path_save: str, path where the .csv will be saved.
+    
     #default parameters based on literature
-    Tb (Brightness Temperature): spots based on limited maximun threshold cold cloud top (ex. <225 K)[Feng et al.,(2021); Li et al.,(2020)]
-    area_Tb: spots with a minimun largest area polygon (ex. > 2000 km2)[Lui et al., (2019); Vizy & Cook,(2018)] 
-    P (Precipitation): By default is the spots greater than 2 mm/h with length[Feng et al.,(2021)].         
+    * Tb, int: MCS based on limited maximun threshold cold cloud top 
+     (ex. <225 K)[Feng et al.,(2021); Li et al.,(2020)]
+    * area_Tb: MCS with a minimun largest area polygon 
+     (ex. > 2000 km2)[Lui et al., (2019); Vizy & Cook,(2018)] 
 
     Outputs:
-    Geodataframe with the polygons associated to the methodology choosed
+    * GeoDataFrame, with the MCS records.
     """ 
     
     global counter, storms_counter
@@ -190,7 +203,7 @@ def detect_mcs(data, detect_scheme = "Both", Tb = 225, area_Tb = 2000, utm_local
     gdf["centroid_"] = gdf.geometry.centroid
     gdf.reset_index(inplace = True, drop = True)
         
-    print("Spots detection completed")
+    print("MCS detection completed")
     
     gdf = MCS(gdf)
 

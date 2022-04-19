@@ -35,11 +35,11 @@ def min_dist(point, gpd2):
     Function to find the nearest polygon based on a georeferenced point.
     
     Inputs:
-    point: Georeferenced point
-    gpd2: Geodataframe - Polygons in a specific time and region
+    * point: geometry, georeferenced point.
+    * gpd2: GeoDataFrame, data polygons in a specific time and region
     
     Outputs:
-    Geoseries with the nearest polygon to the georeferenced point.
+    * GeoSeries, the nearest polygon to the georeferenced point.
     """
     gpd = gpd2.copy()
     gpd['Dist'] = gpd.apply(lambda row:  point.distance(row.geometry),axis=1)
@@ -53,14 +53,20 @@ def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = Non
     This functions works based on identified convective systems in a period of time.   
 
     Inputs:
-    sup: GeodataFrame generated in the process "identify_msc2"
-    threshold_overlapping_percentage (float): By default there is no percentage overlap limit 
+    * sup: GeoDataFrame, result data generated in the process features_Tb() 
+    and features_P (when is using this detect scheme).
+    * threshold_overlapping_percentage: float, by default there is no percentage overlap limit 
     between polygons, however, this can be set. 
-    (ex. 10: This means that the percentage of overlap that is not greater than or equal to 10%, 
+    (ex. 10: this means that the percentage of overlap that is not greater than or equal to 10%, 
     in reference to the largest area polygon, is not taken into account in the trajectory).
+    * utm_local_zone: int, is needed for converting the WGS geodetic coordinate system 
+    to plane coordinate system. This is a constant that must be asociated with the interest 
+    region. (ex. 32718 : is the UTM zone 18S plane coordinate system and is used for tracking 
+    MCS in Colombia, Brasil, Peru, Ecuador, Chile.).
+    * path_save: str, path where the .csv will be saved.
     
     Outputs:
-    GeodataFrame which identifies the tracks in the time period of interest
+    * GeoDataFrame, which identifies the tracks and his associated MCS's.              
     """
     msc_counter = 1
     pd.options.mode.chained_assignment = None

@@ -38,16 +38,21 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = 0, utc_local_sign = "mi
     The temporal resampling is 1 h - nearest original coordinate to up-sampled frequency coordinates.
     
     Inputs:
-    pathTb: Path where the Tb raw data are located.
-    pathP: Path where the P raw data are located.
+    * pathTb: str, path where the Tb raw data are located.
+    * pathP: str, path where the P raw data are located.
     The path must have the next structure:
     linux: r"/home....../"
     windows: r"C:/....../"
     
-    UTC_LOCAL_HOUR: Is needed for converting the raw data hour (UTC) to a local hour (interest region)
+    * utc_local_hour: int, allows transform the raw data hour (UTC) 
+    to a interest time zone (interest region). 
+    * utc_local_sign: str (minus, plus, local), sets whether to add or subtract 
+    in the conversion for the time zone of interest. If set "local" no conversion will be done
+    and the time zone will be GMT or UTC.
+    (ex: UTC-5 timing is determined by utc_local_hour = 5 and utc_local_sign = "minus".
     
     Outputs:
-    Dataset with the  P and Tb data.
+    * xarray.Dataset with the brightness temperature (Tb) and P (Precipitation) data.
     """
       
     if isinstance(pathTb, str) and isinstance(pathP, str): 
@@ -183,10 +188,10 @@ def readTRACKS(path):
     function for reading tracks results. 
 
     Inputs:
-    path: Path where the tracks results is located.
+    * path: str, path where the tracks and MCS results is located.
         
     Outputs:
-    GeoDataFrame with the tracks and MCS.
+    * Geopandas.GeoDataFrame with the tracks and MCS associated.
     """
     
     df = pd.read_csv(path, index_col = ["belong", "id_gdf"], parse_dates = ["time"])
@@ -196,6 +201,18 @@ def readTRACKS(path):
     return df
 
 def plot_folium(resume, location, path_save):
+    """
+    function for plotting tracks results in folium map. 
+
+    Inputs:
+    * resume: GeoDataFrame, data related with the tracks and MCS's.
+    * location list (lat, lon), location for center the map_folium.
+    * path_save: str, path where the .html folium map will be saved   
+    
+    Outputs:
+    * the .html folium map will be open with the librarie "webbrowser"
+    * path_saved: str, path where the .html was saved.
+    """
     m = folium.Map(location=location, zoom_start=5, tiles='CartoDB positron')
     
     df = resume.reset_index()

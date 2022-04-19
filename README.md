@@ -6,7 +6,6 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 The detection of the MCS is from the cold top of the clouds, based on magnitude threshold, and the generation of an approximate horizontal area from the convex hull. The tracking in time and space is done by overlapping areas. The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or MCS detection need.
 
-
 | ![](joss/resume_atrackcs.png) |
 
 ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
@@ -91,9 +90,15 @@ If nothing prints out, installation is successful.
 We welcome contributions from the community. Please create a fork of the project on GitHub
 and use a pull request to propose your changes. 
 
-## Citation
+## use cases
 
-If you use `ATRACKCS` in published research, please cite it by referencing the
+* Spatio-temporal Characterization of Mesoscale Convective Systems over Northern South America. In AGU Fall Meeting 2021.
+[AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/874852).
+
+* Cloud-resolving Simulations of Mesoscale Convective Systems in Colombia. In AGU Fall Meeting 2021.
+[ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia).
+[AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
+
 
 ## Getting help
 

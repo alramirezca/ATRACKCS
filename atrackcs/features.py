@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-featuring brightness temperature, precipitation and trajectories
+characterizing brightness temperature, precipitation and tracks
 @authors: Álvaro Ramírez Cardona (alramirezca@unal.edu.co)
           Vanessa Robledo Delgado (vanessa.robledo@udea.edu.co)
 """
@@ -18,7 +18,6 @@ import uuid
 from geopy.distance import geodesic
 warnings.filterwarnings("ignore")
 
-
 #___________________________________Functions______________________________________________________
 
 class TRACKS():
@@ -33,14 +32,25 @@ class TRACKS():
 #________________Brightness Temperature
 def features_Tb(sup, ds):
     """
-    Function for estimating max, mean and min brightness temperature of each spot 
+    Function for estimating max, mean and min brightness temperature of each MCS.
     
     Inputs
-    sup: GeodataFrame containing the Tb polygons generated in the process "identify_msc2".
-    ds = DataArray associated with the variables P and Tb resulting from the process 'read_resample_data'.
+    * sup: GeodataFrame, with the Tb polygons generated in the process detect_mcs().
+    * ds: Dataset, with the Tb and P data resulting from the process funcs.readNC().
     
     Outputs:
-    GeoDataFrame of the identified polygons with the Tb features
+    * GeoDataFrame, which identifies the MCS's polygons with some Tb attributtes
+    * Attributes:
+        * time: datetime64, hour (UTC-5) for this case.
+        * Tb: float, polygon index after being filtered by the established parameterization.
+        * geometry: geometry, MCS polygon (convex hull). 
+          The crs in this case corresponds to utm_local_zone.
+        * area_Tb: float, area polygon [km**2]
+        * centroid_: geometry, geometric centroid polygon (convex hull). 
+          The crs in this case corresponds to utm_local_zone.
+        * mean_tb: float, Tb average of the pixels composing the polygon [K].
+        * min_tb: float, Tb min value of the pixels composing the polygon [K].
+        * max_tb: float, Tb max value of the pixels composing the polygon [K]. 
     """
     #Preparing the DataArray
     data_magnitud = ds.copy()
@@ -57,7 +67,7 @@ def features_Tb(sup, ds):
     #Creating new columns for the mean, max and min Tb
     sup['mean_tb'] = None; sup['min_tb']= None; sup['max_tb']= None
 
-    print ("Estimating Tb spots features: ")    
+    print ("Estimating MCS's brightness temperature attributes: ")    
     #Estimating Tb features
     for index_t,_dates, progress in zip(gdf_tb.index,sup.time, tqdm.tqdm(range(len(sup.time)-1))):
         _polygon = gdf_tb.geometry.loc[index_t]
@@ -85,6 +95,9 @@ def features_Tb(sup, ds):
 #________________Precipitation
 
 def confirm_P_data(func):
+    """
+    Decorator for checking and blocking the use of P data when the detect_scheme is only by Tb
+    """
     def valid_P(sup, ds, min_precipitation, area_P, drop_empty_precipitation):
         try:
             ds["P"]
@@ -96,22 +109,26 @@ def confirm_P_data(func):
 @confirm_P_data
 def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipitation = False):
     """
-    Function to estimate the existing precipitation (mean P and max P) inside the Tb spots. 
-    These characteristics will only be calculated for Tb spots that satisfy the conditions set 
+    Function to estimate the existing precipitation (mean P and max P) inside the MCS. 
+    These characteristics will only be calculated for MCS that satisfy the conditions set 
     in "min_precipitation" and "area_P".
     
     Inputs:
-    sup: GeoDataframe containing the Tb polygons generated in the process "identify_msc2".
-    ds: DataArray associated with the variables P and Tb resulting from the process 'read_resample_data'.
-    min_precipitation: minimum precipitation limit in each pixel (ex. > 2 mm/h)
-    P_area: minimun area P polygon in Tb polygon (ex. > 500 km2)
-    drop_empty_precipitation (boolean): if True eliminates spots that do not contain precipitation 
-    values within the established criteria. This is useful if you want to establish trajectories
-    only with polygons containing precipitation. 
-
+    * sup: GeoDataframe, result data generated in the process features_Tb().
+    * ds: Dataset, with the Tb and P data resulting from the process funcs.readNC().
+    * min_precipitation: minimum precipitation limit in each pixel (ex. 2 mm/h)
+    * P_area: minimun area P polygon in Tb polygon (ex. 500 km2)
+    * drop_empty_precipitation: boolean, if True remove MCS that do not contain precipitation 
+      values within the established criteria. This is useful if you want to establish tracks
+      only with MCS that satisfy the precipitation criteria. 
 
     Outputs:
-    GeoDataFrame of the identified Tb polygons with the P features
+    * GeoDataFrame, which identifies the MCS's polygons with some Tb and P attributtes
+    * Attributes: this GeoDataFrame contains exactly the information referenced in features_Tb()
+      except for the dropping of some features associated to the Tb and the addition of 
+      some characteristics associated to the MCS precipitation.
+        * mean_pp: float, P average of the pixels composing the polygon [mm/h].
+        * max_pp: float, P max value of the pixels composing the polygon [mm/h].
     """
     
     if ds["P"].time.size != 0:
@@ -132,7 +149,7 @@ def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipit
         sup['mean_pp'] = None; sup['max_pp']= None
     
         #Estimating P features    
-        print("Estimating P spots features: ") 
+        print ("Estimating MCS's precipitation attributes: ")    
         
         #Translating "area_P" in pixels (~10 km x ~10km)
         valid_pixels_precipitation = int((area_P/100.))
@@ -178,14 +195,14 @@ def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipit
     
 def distance_centroids(row):
     """
-     Function to estimate the distance between two points.
-
+    Function to estimate the distance between two georreferenced points.
+    This function execute inside the function distance_direction_Tracks().
     Inputs:
-    row: Geodataframe containing the shift of the storm at time t (centroids)
-    and the storm at time t+1 (centroids_distance)
+    * row: GeoDataFrame, containing the shift of the MCS at time t (centroid_)
+      and the MCS at time t+1 (centroids_distance)
     
     Outputs:
-    distance between two points
+    * distance: float, between the geometric centroids.
     """
     try:
         d = geodesic((row.centroid_.y,row.centroid_.x),(row.centroids_distance.y,row.centroids_distance.x)).km
@@ -198,12 +215,15 @@ def direction_points(row, mode = "u"):
     Function to estimate the direction between two georreferenced points.
     
     Inputs:
-    row: Geodataframe containing the shift of the storm at time t (centroid_)
-    and the storm at time t+1 (centroid_2)
+    * row: GeoDataFrame, containing the shift of the MCS at time t (centroid_)
+      and the MCS at time t+1 (centroid_2)
+    * mode: str(u, v, deg), select the result of based on the output
+
         
-    Outputs: The output is in function of the mode
-    deg: direction in degrees between the two points
-    u, v: normalized vector components  
+    Outputs: The output is in function of the mode selected
+    * deg: direction in degrees between the two points
+    * u: normalized vector component
+    * v: normalized vector component
     """
     
     try:
@@ -235,14 +255,14 @@ def uv_to_degrees(U,V):
     Calculates the direction in degrees from the u and v components.
     Takes into account the direction coordinates is different than the 
     trig unit circle coordinate. If the direction is 360 then returns zero
-    (by %360)
+    (by %360). This function execute inside the function distance_direction_Tracks().
     
     Inputs:
-     U: west/east direction (from the west is positive, from the east is negative)
-     V: south/noth direction (from the south is positive, from the north is negative)
+    * U: float, west/east direction (from the west is positive, from the east is negative)
+    * V: float, south/noth direction (from the south is positive, from the north is negative)
       
     Outputs:
-    float: distance between two points      
+    * direction in degrees: float  
     """
     WDIR= (270-np.rad2deg(np.arctan2(V,U)))%360
     return WDIR
@@ -250,14 +270,14 @@ def uv_to_degrees(U,V):
 
 def distance_direction_Tracks(sup):
     """
-     Function to estimate the distance and direction of all points that compose 
-     the tracks of a GeoDataframe. It must be executed after executing the finder_msc2.
+    Function to estimate the distance and direction of the MCS's that compose 
+    the tracks. This function execute inside the function feature_Tracks().
      
     Inputs:
-    sup: Geodataframe containing the trajectories output from finder_msc2
-    
+    * sup: GeoDataframe, result data generated in the process features_Tb() or features_P().
+
     Outputs:
-    Geodataframe with the distances calculated.
+    * Geodataframe, with the distances and directions of the MCS's estimated.
     """
     
     #Making new columns
@@ -347,16 +367,37 @@ def distance_direction_Tracks(sup):
 def features_Tracks(sup, initial_time_hour = 0, encrypt_index = True,
                     path_save = None):
     """
-    Function for calculating characteristics associated with each tracking
-    average speed, average distance, average direction, 
-    total duration, average area, total distance traveled, total time traveled
+    Function for calculating attributes associated with the tracks
     
     Inputs:
-    sup: DataFrame generated in process "finder_msc2"
-    initial_time_hour: Default is 0, but could chnage based on in a specific hour duration tracks
+    * sup: GeoDataFrame, result data generated in the process track_mcs() 
+    * initial_time_hour: int, default is 0 but could change based for filtering
+      tracks based on total duration.
+    * encrypt_index: boolean, default is True. The index generated is encrypted 
+      and generated using the uuid library for each MCS and each track.
+    * path_save: str, path where the .csv results will be saved.   
     
     Outputs:
-    DataFrame containing tracks and features
+    * GeoDataFrame, which identifies the tracks and the MCS's polygons with some Tb, P 
+      and tracks attributtes
+    * Attributes: this GeoDataFrame contains exactly the information referenced in features_Tb()
+      and features_P() except for the addition of some attributes associated to the tracks.
+        * belong: str, encrypted index generated for each track.
+        * id_gdf: str, encrypted index generated for each MCS.
+        * geometry: geometry, polygon. The crs in this case corresponds to WGS84 - EPSG:4326.
+        * centroid_: geometry, geometric centroid polygon. The crs in this case corresponds
+          to WGS84 - EPSG:4326.
+        * intersection_percentage: float, percentage overlap between MCS [%].
+        * distance_c: float, distance between the overlapping geometric 
+          centroids of the MCS [km].
+        * direction: float, direction between the overlapping geometric 
+          centroids of the MCS [°].
+        * total_duration: float, total duration of the event or the track. 
+          This value is associated to each MCS of the corresponding track [h].
+        * total_distance: float, total distance of the event or the track. 
+          This value is associated to each MCS of the corresponding track [km].
+        * mean_velocity: float, velocity average of the event or the track. 
+          This value is associated to each MCS of the corresponding track [km/h].
     """      
 		
     #Estimating distance and direction between geometrics centroids
