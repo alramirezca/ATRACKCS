@@ -17,13 +17,13 @@ established from an extensive literature review, which can be consulted below.
 
 ## The detection of the MCS (regions) is performed using these steps:
 
-1. At any time pixel, find all where brightness temperature `Tb` < 225 K
+1. At any time pixel, find all where brightness temperature `Tb` =< 225 K
 and trace an approximate region, with the convex hull, according to a binary
 structure where the pixels that satisfy the described condition are equal to
 1 and those that do not are equal to 0.
 2. Transform from geographic to plane coordinates the pixels and compute an 
 approximate area of those regions traced. 
-3. Discard all regions whose area is <= 2000 km^2.
+3. Discard all regions whose area is < 2000 km^2.
 4. Estimate the average, minimum and maximum brightness temperature of those 
 regions.
 5. At any time pixel, find all where precipitation `P` >= 2 mm/h and discard
@@ -32,7 +32,7 @@ pixels that do not match with the regions estimated in that time step.
 that satisfy the previous condition and that are contained in the regions.
 7. Estimate the average and maximum precipitation for each region whose area
 is >= 500 km^2. The algorithm has the option of discard those regions whose
-precipitaion area is <= 500 km^2, but in this case those regions are going
+precipitaion area is < 500 km^2, but in this case those regions are going
 to be part of the possible tracks.
 
 ## The tracks are performed using these steps:

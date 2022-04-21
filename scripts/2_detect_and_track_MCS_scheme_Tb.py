@@ -17,13 +17,13 @@ based on the use of brightness temperature.
 
 ## The detection of the MCS (regions) is performed using these steps:
 
-1. At any time pixel, find all where brightness temperature `Tb` < 215 K
+1. At any time pixel, find all where brightness temperature `Tb` =< 215 K
 and trace an approximate region, with the convex hull, according to a binary
 structure where the pixels that satisfy the described condition are equal to
 1 and those that do not are equal to 0.
 2. Transform from geographic to plane coordinates the pixels and compute an 
 approximate area of those regions traced. 
-3. Discard all regions whose area is <= 1000 km^2.
+3. Discard all regions whose area is < 1000 km^2.
 4. Estimate the average, minimum and maximum brightness temperature of those 
 regions.
 
@@ -44,9 +44,7 @@ to one MCS at time t+1, similarly, any MCS at time t+1 can only be linked
 to one MCS at time t.
 4. All tracks that do not get updated during the t - t+1 process terminate.
 This assumes that no gap in the track is allowed. 
-5. In this first part no tracks are discarded based on their total duration. 
-The algorithm has the option for filtering the tracks with a specific minimun
-duration or not.
+5. Discard tracks that last 2 hours or less.
 
 ## Input data
 
@@ -133,7 +131,7 @@ THRESHOLD_OVERLAPPING_P = 15
 
 LOCATION_FOLIUM = [5, -73.94]
 
-MIN_DURATION = 2
+MIN_DURATION = 3
 #________________________________#Import modules_____________________________________________
 
 from atrackcs.utils import funcs

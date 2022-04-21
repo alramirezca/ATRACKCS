@@ -151,7 +151,7 @@ def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipit
         #Estimating P features    
         print ("Estimating MCS's precipitation attributes: ")    
         
-        #Translating "area_P" in pixels (~10 km x ~10km)
+        #Translating "area_P" in pixels (~10 km x ~10 km)
         valid_pixels_precipitation = int((area_P/100.))
         
         
@@ -160,7 +160,7 @@ def features_P(sup, ds, min_precipitation = 2, area_P = 500, drop_empty_precipit
             coordinates = np.dstack((_polygon.exterior.coords.xy[0], _polygon.exterior.xy[1]))
             geometries = [{'type': 'Polygon', 'coordinates': [coordinates[0]]}]
     
-            #Applying criteria 2 mm/hr
+            #Applying criteria min precipitation mm/hr
             blob_clipped = data_magnitud_.loc[:,:,str(_dates)].rio.clip(geometries, gdf_tb.crs, drop=False, invert=False)
             blob_clipped = blob_clipped.where(blob_clipped>=min_precipitation) 
             
@@ -456,7 +456,7 @@ def features_Tracks(sup, initial_time_hour = 0, encrypt_index = True,
     
     #Leaving only the tracks based on initial_time_hour
     reg_sup = reg_sup.reset_index()
-    reg_sup = reg_sup[reg_sup['total_duration'] > initial_time_hour].sort_index()
+    reg_sup = reg_sup[reg_sup['total_duration'] >= initial_time_hour].sort_index()
     reg_sup = reg_sup.set_index(["belong", "id_gdf"])
     reg_sup = reg_sup.sort_index()
     
