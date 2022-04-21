@@ -2,17 +2,17 @@
 
 ## Introduction
 
-ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The algorithm uses brightness temperature and precipitation coming from satellite data.
+ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The algorithm uses brightness temperature (Tb) and precipitation (P) coming from satellite data.
 
 ### The detection of the MCS (regions) is performed using these steps:
 
-1. At any time pixel, find all where brightness temperature `Tb <= Tb_threshold [200 k - 240 k]` and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to 1 and those that do not are equal to 0.
+1. At any time pixel, find all where `Tb <= Tb_threshold [200 k - 240 k]` and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to 1 and those that do not are equal to 0.
 2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
 3. Discard all regions whose area is `>= area_threshold [> 1000 km**2]`
-4. Estimate brightness temperature attributes of those regions.
-5. Estimate precipitation attributes of those regions (no required).
+4. Estimate Tb attributes of those regions.
+5. Estimate P attributes of those regions. This is optional as the algorithm can operate only with Tb as input variable.
 
-![](joss/resume_atrackcs.png)
+![](joss/resume_atrackcs_1.png)
 
 ### The tracks are performed using these steps:
 
@@ -20,6 +20,8 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 2. The MCS with the lowest percentage of overlap at time `t+1` could form a track on their own, and waits to be associated in the next iteration between `t+1` and `t+2`.
 3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`, similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
 4. All tracks that do not get updated during the `t` - `t+1` process terminate. This assumes that no gap in the track is allowed. 
+
+![](joss/resume_atrackcs_2.png)
 
  The algorithm can be adapted to the needs of MCS detection, as it allows parameterization of the brightness temperature and precipitation (optional). ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological and climatological fields.
 
