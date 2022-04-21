@@ -278,7 +278,7 @@ As the last step, let is reload the tracks results from the local storage
 and plot the MCS with the help of the folium library
 
 The read process tracks is handled with the function `funcs.readTRACKS()`.
-The function `funcs.plot_folium()` save the `.html` result and return the path where was saved.
+The function `funcs.plot_folium()` saves the `.html` result and return the path where was saved.
 """
 
 #-------------------Load results-------------------

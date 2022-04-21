@@ -2,20 +2,32 @@
 
 ## Introduction
 
-ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The algorithm uses brightness temperature and precipitation coming from satellite data: [Merge IR](https://doi.org/10.5067/P4HZB9N27EKU/) V1 and [IMERG V06B](https://doi.org/10.5067/GPM/IMERG/3B-HH/06).
+ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The algorithm uses brightness temperature and precipitation coming from satellite data.
 
+### The detection of the MCS (regions) is performed using these steps:
 
-The detection of the MCS is from the cold top of the clouds, based on magnitude threshold, and the generation of an approximate horizontal area from the convex hull. The tracking in time and space is done by overlapping areas. The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or MCS detection need.
+1. At any time pixel, find all where brightness temperature `Tb` $\le Tb_threshold K$ and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to $1$ and those that do not are equal to $0$.
+2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
+3. Discard all regions whose area is $\le Area_threshold km^2$.
+4. Estimate the average, minimum and maximum brightness temperature of those regions.
+5. (Optional) Estimate region's precipitation attributes.
 
 ![](joss/resume_atrackcs.png)
 
-ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
+### The tracks are performed using these steps:
+
+1. **overlapping priority** principle: for any MCS at time $t$, the MCS with the highest percentage of overlap at time $t+1$ "wins" and is associated with it. 
+2. The MCS with the lowest percentage of overlap at time $t+1$ could form a track on their own, and waits to be associated in the next iteration between $t+1$ and $t+2$.
+3. No merging or splitting is allowed, any MCS at time $t$ can only be linked to one MCS at time $t+1$, similarly, any MCS at time $t+1$ can only be linked to one MCS at time $t$.
+4. All tracks that do not get updated during the $t$ - $t+1$ process terminate. This assumes that no gap in the track is allowed. 
+
+ The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or MCS detection need.ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
 
 ## Input Data 
 
-[Brightness Temperature: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is Tb and the files format must be netCDF4.](https://doi.org/10.5067/P4HZB9N27EKU/)
+Brightness Temperature: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is Tb and the files format must be netCDF4. [Access link](https://doi.org/10.5067/P4HZB9N27EKU/)
 
-[Precipitation: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is PrecipitationCal and the files format must be netCDF4.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
+Precipitation: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is PrecipitationCal and the files format must be netCDF4. [Access link](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
 
 ## Main Dependencies
 
