@@ -2,13 +2,20 @@
 
 ## Introduction
 
-ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The operation of the algorithm is by using brightness temperature and precipitation, whose data coming from satellite data (MERGE IR and IMERG V06B). 
+ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The algorithm uses brightness temperature and precipitation coming from satellite data: [Merge IR](https://doi.org/10.5067/P4HZB9N27EKU/) V1 and [IMERG V06B](https://doi.org/10.5067/GPM/IMERG/3B-HH/06).
+
 
 The detection of the MCS is from the cold top of the clouds, based on magnitude threshold, and the generation of an approximate horizontal area from the convex hull. The tracking in time and space is done by overlapping areas. The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or MCS detection need.
 
 ![](joss/resume_atrackcs.png)
 
 ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
+
+## Input Data 
+
+[Brightness Temperature: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is Tb and the files format must be netCDF4.](https://doi.org/10.5067/P4HZB9N27EKU/)
+
+[Precipitation: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is PrecipitationCal and the files format must be netCDF4.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
 
 ## Main Dependencies
 
@@ -36,7 +43,7 @@ Recommend building the Python environment using [Anaconda](https://www.anaconda.
 After Anaconda installation, git clone this repository:
 
 ```
-git clone https://github.com/alramirezca/atrackcs
+git clone https://github.com/alramirezca/ATRACKCS
 ```
 
 Then build a new conda environment using the environment file provided. For example:
@@ -78,13 +85,13 @@ If nothing prints out, installation is successful.
 * atrackcs: core module functions.
 * notebooks: a series of jupyter notebooks illustrating the major functionalities of the package.
 * scripts: example computation scripts. 
-* test: integration tests for detects schemes.
+* test: integration tests for detecting schemes.
 
 ## Changelog
 
 ### v1.0
 
-* initial upload. Can perform MSC detection and tracking through time and space.
+* initial upload. Can perform MCS detection and tracking through time and space.
 
 ## Use in researchs
 

@@ -31,7 +31,7 @@ regions.
 
 Specifically, assume we have detected n MSC at time t, and m MSC at time t+1. 
 There are theoretically n*m possible associations to link these two groups of
-MCS. Of cause not all of them are meaningful. The rules that are applied 
+MCS. Of course not all of them are meaningful. The rules that are applied 
 in the association process are:
 
 1. overlapping priority principle: for any MCS at time $t$, the MCS with the 
@@ -42,7 +42,7 @@ t+1 and t+2.
 3. No merging or splitting is allowed, any MCS at time t can only be linked 
 to one MCS at time t+1, similarly, any MCS at time t+1 can only be linked
 to one MCS at time t.
-4. All tracks that do not get updated during the t - t+1 process terminates.
+4. All tracks that do not get updated during the t - t+1 process terminate.
 This assumes that no gap in the track is allowed. 
 5. In this first part no tracks are discarded based on their total duration. 
 The algorithm has the option for filtering the tracks with a specific minimun
@@ -82,11 +82,10 @@ geographical locations of the MSC with informations that links to the associaded
 
 """
 #________________________________#Set Paths_____________________________________________
-#As before, first we give the locations to the input (raw data) using `TBDIR` 
-#and `PDIR` and output data using `OUTDIR`.
+#First of all we assign the locations to the input (raw data) using `TBDIR` 
+#and output data using `OUTDIR`.
 
 TBDIR=  r"C:/Users/ASUS/Documents/GitHub/atrackcs/notebooks/2_input_data/tb/"
-PDIR= r"C:/Users/ASUS/Documents/GitHub/atrackcs/notebooks/2_input_data/p/"
 
 OUTDIR=r"C:/Users/ASUS/Documents/GitHub/atrackcs/scripts/2_output_data/"
 

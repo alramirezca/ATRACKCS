@@ -283,8 +283,8 @@ def distance_direction_Tracks(sup):
     #Making new columns
     sup["distance_c"] = None; contador = 0
     sup["direction"] = None; sup["u"] = None; sup["v"] = None
-    sup["estado"] = None;
-    sup["estado_porcentaje"] = None
+    # sup["estado"] = None;
+    # sup["estado_porcentaje"] = None
 
     tracks = sup.belong.unique(); len_track = len(tracks)
 
@@ -324,20 +324,20 @@ def distance_direction_Tracks(sup):
 
         del track_df["direction_fake"]; del track_df["v_fake"]; del track_df["u_fake"]
                
-        #Generating qualitative and quantitative information on the growth or decrease of the spot based on last state
-        track_df["estado"] = np.where(track_df["area_tb"].diff() > 0, 'CRECIENDO', 'DECRECIENDO')
-        track_df["diferencia_area"] = track_df["area_tb"].diff()
-        track_df["area_tb_fake"] = track_df["area_tb"].shift(1)
-        track_df["estado_porcentaje"] = track_df.apply(lambda track_df: 
-            track_df["diferencia_area"]*100/track_df["area_tb_fake"], axis = 1)
-        track_df.loc[(track_df["estado_porcentaje" ] >= - 10.) & (track_df["estado_porcentaje" ] <= 10.), "estado"] = "ESTABLE"
+        # #Generating qualitative and quantitative information on the growth or decrease of the spot based on last state
+        # track_df["estado"] = np.where(track_df["area_tb"].diff() > 0, 'CRECIENDO', 'DECRECIENDO')
+        # track_df["diferencia_area"] = track_df["area_tb"].diff()
+        # track_df["area_tb_fake"] = track_df["area_tb"].shift(1)
+        # track_df["estado_porcentaje"] = track_df.apply(lambda track_df: 
+        #     track_df["diferencia_area"]*100/track_df["area_tb_fake"], axis = 1)
+        # track_df.loc[(track_df["estado_porcentaje" ] >= - 10.) & (track_df["estado_porcentaje" ] <= 10.), "estado"] = "ESTABLE"
         
-        first_index_main = track_df.iloc[0].name
+        # first_index_main = track_df.iloc[0].name
         
-        #Assigning nan to the first record of the track
-        track_df.loc[first_index_main, "estado"] = np.nan
+        # #Assigning nan to the first record of the track
+        # track_df.loc[first_index_main, "estado"] = np.nan
 
-        del track_df["area_tb_fake"]; del track_df["diferencia_area"] 
+        # del track_df["area_tb_fake"]; del track_df["diferencia_area"] 
         
         #Replacing the obtained values of direction (degrees) in the original dataframe
         index_track_direccion = track_df.index    
@@ -345,9 +345,9 @@ def distance_direction_Tracks(sup):
         sup.loc[index_track_direccion, "u"] = track_df["u"]   
         sup.loc[index_track_direccion, "v"] = track_df["v"]   
         
-        #Replacing status and percentage status values
-        sup.loc[index_track_direccion, "estado"] = track_df["estado"]   
-        sup.loc[index_track_direccion, "estado_porcentaje"] = track_df["estado_porcentaje"]   
+        # #Replacing status and percentage status values
+        # sup.loc[index_track_direccion, "estado"] = track_df["estado"]   
+        # sup.loc[index_track_direccion, "estado_porcentaje"] = track_df["estado_porcentaje"]   
                                
         contador +=1
         #porcentaje = round((contador*100./len_track),2)
@@ -404,8 +404,7 @@ def features_Tracks(sup, initial_time_hour = 0, encrypt_index = True,
     sup = distance_direction_Tracks(sup)
 
     #Preparing Dataframe   
-    NUEVODF = sup.copy()
-    NUEVODF = NUEVODF.set_index(['belong', 'id_gdf']).sort_index()
+    sup = sup.set_index(['belong', 'id_gdf']).sort_index()
 
     #Replacing old id for spots and tracks based on alphanumeric code 16 and 20
     #characteres respectively    
@@ -415,25 +414,24 @@ def features_Tracks(sup, initial_time_hour = 0, encrypt_index = True,
 
     #Encriptying index track and index spot     
     if encrypt_index == True:
-        for track_id in NUEVODF.index.levels[1]:
+        for track_id in sup.index.levels[1]:
             new_track_id.append(str(uuid.uuid4())[-22:])
-        dic_replace_track_id = dict(zip(NUEVODF.index.levels[1].values, new_track_id))
+        dic_replace_track_id = dict(zip(sup.index.levels[1].values, new_track_id))
         
-        for belong_id in NUEVODF.index.levels[0]:
+        for belong_id in sup.index.levels[0]:
             new_belong.append(str(uuid.uuid4())[:13])
-        dic_replace_belong = dict(zip(NUEVODF.index.levels[0].values, new_belong))
+        dic_replace_belong = dict(zip(sup.index.levels[0].values, new_belong))
 
-        reg_sup_res =  NUEVODF.reset_index()
+        reg_sup_res =  sup.reset_index()
         
         reg_sup_res.belong = reg_sup_res.belong.replace(dic_replace_belong)
         reg_sup_res.id_gdf = reg_sup_res.id_gdf.replace(dic_replace_track_id)
     else:
-        reg_sup_res =  NUEVODF.reset_index()
+        reg_sup_res =  sup.reset_index()
         pass
     
-
-       
-    reg_sup_res = reg_sup_res.drop(labels=['Tb', 'min_tb', 'max_tb','u','v', 'estado','estado_porcentaje'],axis=1)
+    #Droppig Tb index, min Tb, max_Tb and u, v   
+    reg_sup_res = reg_sup_res.drop(labels=['Tb', 'min_tb', 'max_tb','u','v'],axis=1)
        
     reg_sup = reg_sup_res.set_index(["belong" , "id_gdf"]).sort_index()
     
