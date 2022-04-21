@@ -10,7 +10,7 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
 3. Discard all regions whose area is `>= area_threshold [> 1000 km**2]`
 4. Estimate brightness temperature attributes of those regions.
-5. (Optional) Estimate precipitation attributes of those regions.
+5. Estimate precipitation attributes of those regions (no required).
 
 ![](joss/resume_atrackcs.png)
 
@@ -21,7 +21,7 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`, similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
 4. All tracks that do not get updated during the `t` - `t+1` process terminate. This assumes that no gap in the track is allowed. 
 
- The algorithm can be adapted to the needs of MCS detection, as it allows parameterization of the brightness temperature and precipitation (optional). ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
+ The algorithm can be adapted to the needs of MCS detection, as it allows parameterization of the brightness temperature and precipitation (optional). ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological and climatological fields.
 
 ## Input Data 
 
