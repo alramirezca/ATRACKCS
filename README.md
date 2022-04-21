@@ -8,7 +8,7 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 1. At any time pixel, find all where brightness temperature `Tb <= Tb_threshold [200 k - 240 k]` and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to 1 and those that do not are equal to 0.
 2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
-3. Discard all regions whose area is `>= area_threshold [> 999 km**2]`
+3. Discard all regions whose area is `>= area_threshold [> 1000 km**2]`
 4. Estimate brightness temperature attributes of those regions.
 5. (Optional) Estimate precipitation attributes of those regions.
 
@@ -21,13 +21,13 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`, similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
 4. All tracks that do not get updated during the `t` - `t+1` process terminate. This assumes that no gap in the track is allowed. 
 
- The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or MCS detection need.ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
+ The algorithm can be adapted to the needs of MCS detection, as it allows parameterization of the brightness temperature and precipitation (optional). ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
 
 ## Input Data 
 
-Brightness Temperature: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is Tb and the files format must be netCDF4. [Access link](https://doi.org/10.5067/P4HZB9N27EKU/)
+Brightness Temperature: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is Tb and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/P4HZB9N27EKU/)
 
-Precipitation: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is PrecipitationCal and the files format must be netCDF4. [Access link](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
+Precipitation: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is PrecipitationCal and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
 
 ## Main Dependencies
 
