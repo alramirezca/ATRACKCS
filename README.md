@@ -6,20 +6,20 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 ### The detection of the MCS (regions) is performed using these steps:
 
-1. At any time pixel, find all where brightness temperature `Tb` $\le Tb_threshold K$ and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to $1$ and those that do not are equal to $0$.
+1. At any time pixel, find all where brightness temperature `Tb <= Tb_threshold [200 k - 240 k]` and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to 1 and those that do not are equal to 0.
 2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
-3. Discard all regions whose area is $\le Area_threshold km^2$.
-4. Estimate the average, minimum and maximum brightness temperature of those regions.
-5. (Optional) Estimate region's precipitation attributes.
+3. Discard all regions whose area is `>= area_threshold [> 999 km**2]`
+4. Estimate brightness temperature attributes of those regions.
+5. (Optional) Estimate precipitation attributes of those regions.
 
 ![](joss/resume_atrackcs.png)
 
 ### The tracks are performed using these steps:
 
-1. **overlapping priority** principle: for any MCS at time $t$, the MCS with the highest percentage of overlap at time $t+1$ "wins" and is associated with it. 
-2. The MCS with the lowest percentage of overlap at time $t+1$ could form a track on their own, and waits to be associated in the next iteration between $t+1$ and $t+2$.
-3. No merging or splitting is allowed, any MCS at time $t$ can only be linked to one MCS at time $t+1$, similarly, any MCS at time $t+1$ can only be linked to one MCS at time $t$.
-4. All tracks that do not get updated during the $t$ - $t+1$ process terminate. This assumes that no gap in the track is allowed. 
+1. **overlapping priority** principle: for any MCS at time `t`, the MCS with the highest percentage of overlap at time `t+1` "wins" and is associated with it. 
+2. The MCS with the lowest percentage of overlap at time `t+1` could form a track on their own, and waits to be associated in the next iteration between `t+1` and `t+2`.
+3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`, similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
+4. All tracks that do not get updated during the `t` - `t+1` process terminate. This assumes that no gap in the track is allowed. 
 
  The algorithm allows parameterization and can be adapted to the specific needs of each geographic environment and/or MCS detection need.ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological (short term) and climatological (long term) fields.
 
@@ -48,7 +48,7 @@ Precipitation: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30
 
 ## Installation
 
-Recommend building the Python environment using [Anaconda](https://www.anaconda.com/distribution/).
+Recommend building the Python environment using [Anaconda](https://www.anaconda.com/distribution/). Installation may take several minutes.
 
 ### Create conda environment using environment file
 
