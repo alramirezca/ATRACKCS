@@ -8,7 +8,7 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 1. At any time pixel, find all where `Tb <= Tb_threshold [200 k - 240 k]` and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to 1 and those that do not are equal to 0.
 2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
-3. Discard all regions whose area is `>= area_threshold [>= 1000 km**2]`
+3. Discard all regions whose area is `<= area_threshold [>= 1000 km**2]`
 4. Estimate Tb attributes of those regions.
 5. Estimate P attributes of those regions. This is optional as the algorithm can operate only with Tb as input variable.
 
