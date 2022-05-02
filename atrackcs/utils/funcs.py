@@ -218,7 +218,10 @@ def plot_folium(resume, location, path_save):
     df = resume.reset_index()
     
     for i in df.belong.unique():
+        #Sorting index by time
         tracks = df.loc[df.belong == i].reset_index()
+        tracks  = tracks.set_index("time").sort_index()
+        tracks = tracks.reset_index()
         for idn, r in tracks.iterrows():
 
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
