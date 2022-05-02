@@ -31,7 +31,7 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 **Precipitation**: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is `PrecipitationCal` and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
 
-suggest  the option "subset/get data" and use OpenDAP method for downloading and refining date range and interest region.
+We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining date range and interest region.
 
 ## Main Dependencies
 
