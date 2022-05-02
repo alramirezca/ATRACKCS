@@ -27,9 +27,11 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 ## Input Data 
 
-**Brightness Temperature**: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is Tb and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/P4HZB9N27EKU/)
+**Brightness Temperature**: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is `Tb` and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/P4HZB9N27EKU/)
 
-**Precipitation**: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is PrecipitationCal and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
+**Precipitation**: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is `PrecipitationCal` and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
+
+suggest  the option "subset/get data" and use OpenDAP method for downloading and refining date range and interest region.
 
 ## Main Dependencies
 
