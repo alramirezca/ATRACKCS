@@ -100,8 +100,10 @@ def readNC(pathTb = None, pathP = None, utc_local_hour = 0, utc_local_sign = "mi
                 datedt = datex.to_pydatetime() - timedelta(hours=utc_local_hour)
             elif utc_local_sign == "plus":
                 datedt = datex.to_pydatetime() + timedelta(hours=utc_local_hour)
+            elif utc_local_sign == "local":
+                datedt = datex.to_pydatetime() 
             else:
-                raise TypeError("You must type a valid parameter for utc_local_sign: minus, plus or local. If you use local please enter tc_local_hour = 0")
+                raise TypeError("You must type a valid parameter for utc_local_sign: minus, plus or local. If you use local please enter utc_local_hour = 0")
 
             dates_64 = [np.datetime64(row) for row in datedt]
             ds =  ds.assign_coords({"time": dates_64})
