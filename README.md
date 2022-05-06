@@ -2,12 +2,12 @@
 
 ## Introduction
 
-ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for automated mesoscale convective systems (MCS) detection and tracking. The algorithm uses brightness temperature (Tb) and precipitation (P) coming from satellite data.
+ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for the automated detection and tracking of mesoscale convective systems (MCS). The algorithm uses brightness temperature (Tb) and precipitation (P) coming from satellite data.
 
 ### The detection of the MCS (regions) is performed using these steps:
 
-1. At any time pixel, find all where `Tb <= Tb_threshold [200 k - 240 k]` and trace an approximate region, with the convex hull, according to a binary structure where the pixels that satisfy the described condition are equal to 1 and those that do not are equal to 0.
-2. Transform from geographic to plane coordinates the pixels and compute an approximate area of those regions traced. 
+1. At a given time step, the algorithm finds all pixels where `Tb <= Tb_threshold [200 k - 240 k]` and defines approximate regions with the convex hull,  using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0.
+2. Transform from geographic to plane coordinates and compute an approximate area of the defined regions. 
 3. Discard all regions whose area is `<= area_threshold [>= 1000 km**2]`
 4. Estimate Tb attributes of those regions.
 5. Estimate P attributes of those regions. This is optional as the algorithm can operate only with Tb as input variable.
@@ -17,13 +17,13 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 ### The tracks are performed using these steps:
 
 1. **overlapping priority** principle: for any MCS at time `t`, the MCS with the highest percentage of overlap at time `t+1` "wins" and is associated with it. 
-2. The MCS with the lowest percentage of overlap at time `t+1` could form a track on their own, and waits to be associated in the next iteration between `t+1` and `t+2`.
-3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`, similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
+2. The MCS with the lowest percentage of overlap at time `t+1` could form a track on their own, and is left to be associated in the next iteration between `t+1` and `t+2`.
+3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`. Similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
 4. All tracks that do not get updated during the `t` - `t+1` process terminate. This assumes that no gap in the track is allowed. 
 
 ![](joss/resume_atrackcs_2.png)
 
- The algorithm can be adapted to the needs of MCS detection, as it allows parameterization of the Tb and P (no required). ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological and climatological fields.
+ The algorithm can be adapted to the needs of the MCS detection, as the user is allowed to define the thresholds of Tb and P (no required). ATRACKCS is intended for researchers and students who are interested in the characterization of MCS both in the meteorological and climatological fields.
 
 ## Input Data 
 
@@ -31,7 +31,7 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for aut
 
 **Precipitation**: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is `PrecipitationCal` and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
 
-We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining date range and interest region.
+We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining the date range and interest region.
 
 ## Main Dependencies
 
@@ -52,7 +52,7 @@ We suggest the option `subset/get data` and use `OpenDAP` method for downloading
 
 ## Installation
 
-Recommend building the Python environment using [Anaconda](https://www.anaconda.com/distribution/). Installation may take several minutes.
+It is recommended to build the Python environment using [Anaconda](https://www.anaconda.com/distribution/). Installation may take several minutes.
 
 ### Create conda environment using environment file
 
