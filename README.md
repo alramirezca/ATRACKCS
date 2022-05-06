@@ -16,8 +16,8 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for the
 
 ### The tracks are performed using these steps:
 
-1. **overlapping priority** principle: for any MCS at time `t`, the MCS with the highest percentage of overlap at time `t+1` "wins" and is associated with it. 
-2. The MCS with the lowest percentage of overlap at time `t+1` could form a track on their own, and is left to be associated in the next iteration between `t+1` and `t+2`.
+1. **overlapping priority** principle: for any MCS at time `t`, the MCS with the highest olverlap percentage at time `t+1` "wins" and is associated with it. 
+2. The MCS (with lower or no overlap percentages) at time `t+1` could form a track on their own, and are left to be associated in the next iteration between `t+1` and `t+2`.
 3. No merging or splitting is allowed, any MCS at time `t` can only be linked to one MCS at time `t+1`. Similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`.
 4. All tracks that do not get updated during the `t` - `t+1` process terminate. This assumes that no gap in the track is allowed. 
 
@@ -27,9 +27,9 @@ ATRACKCS (Algorithm for Tracking Convective Systems) is a Python package for the
 
 ## Input Data 
 
-**Brightness Temperature**: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is `Tb` and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/P4HZB9N27EKU/)
+**Brightness Temperature**: NCEP/CPC L3 (Merge IR V1): Spatial and temporal resolution is 4 km and 30 minutes, data availability from February 7, 2000 to present. The interest variable of this dataset is `Tb` and the file format must be netCDF4. [Access link.](https://doi.org/10.5067/P4HZB9N27EKU/)
 
-**Precipitation**: GPM (IMERG V06B): Spatial and temporal resolution is 10 km and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is `PrecipitationCal` and the files format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
+**Precipitation**: GPM (IMERG V06B): Spatial and temporal resolution is 0.1 degree (∼10 km) and 30 minutes, data availability from June 1, 2000 to present. The interest variable of this dataset is `PrecipitationCal` and the file format must be netCDF4. [Access link.](https://doi.org/10.5067/GPM/IMERG/3B-HH/06)
 
 We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining the date range and interest region.
 
