@@ -372,7 +372,7 @@ def features_Tracks(sup, initial_time_hour = 0, encrypt_index = True,
     Inputs:
     * sup: GeoDataFrame, result data generated in the process track_mcs() 
     * initial_time_hour: int, default is 0 but could change based for filtering
-      tracks based on total duration.
+      tracks based on minimun hour duration.
     * encrypt_index: boolean, default is True. The index generated is encrypted 
       and generated using the uuid library for each MCS and each track.
     * path_save: str, path where the .csv results will be saved.   

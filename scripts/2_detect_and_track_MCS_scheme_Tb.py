@@ -7,25 +7,33 @@ form tracks with a scheme based on brightness temperature
           
 This script tracks detected MCS at individual time steps to form tracks.
 
-The principle for detecting the MCS is from the cold top of the clouds,
-according to a limiting range of brightness temperature, and an approximate
-horizontal area generating from the convex hull. The algorithm has the option
-to operate with only brightness temperature or associating this scheme with
-precipitation features. The selection criteria and filters for considering 
-or not a MCS can be modified. The parameterization in this notebook is only
-based on the use of brightness temperature.
+ATRACKCS is a Python package for the automated detection and tracking of MCS. 
+It is a potential tool for characterizing their spatio-temporal distribution 
+and evolution. ATRACKCS provides a set of Python functions designed for a 
+workflow analysis that includes the detection and characterization of MCS, 
+as well as the integration in tracks, allowing detailed monitoring of the MCS
+life cycle both in space and time.
+
+ATRACKCS uses brightness temperature (Tb) and precipitation (P) coming from
+satellite data and can operate with Tb as the only input variable or associating
+precipitation features. Although the magnitude of Tb does not represent a
+direct measurement of P, it is an indirect representation of cloud cover 
+height associated with an MCS event. Some methodologies for MCS detection use 
+other satellite spectral bands as a proxy for P. The algorithm parameterization 
+can be adapted to the needs of the MCS detection, as the user is allowed to 
+define the thresholds of Tb and P. The parameterization in this notebook was 
+established from an extensive literature review, which can be consulted below.    
 
 ## The detection of the MCS (regions) is performed using these steps:
 
-1. At any time pixel, find all where brightness temperature `Tb` =< 215 K
-and trace an approximate region, with the convex hull, according to a binary
-structure where the pixels that satisfy the described condition are equal to
-1 and those that do not are equal to 0.
-2. Transform from geographic to plane coordinates the pixels and compute an 
-approximate area of those regions traced. 
-3. Discard all regions whose area is < 1000 km^2.
-4. Estimate the average, minimum and maximum brightness temperature of those 
-regions.
+1. At a given time step, the algorithm finds all pixels where Tb  ≤215𝐾  and defines
+approximate regions with the convex hull, using a binary structure where the pixels
+that satisfy the described condition are equal to  1  and the remaining pixels are
+equal to  0.
+2. Transform from geographic to plane coordinates and compute an approximate area 
+of the defined regions.
+3. Discard all regions whose area is  <1000𝑘𝑚2 .
+4. Estimate the average, minimum and maximum brightness temperature of those regions.
 
 ## The tracks are performed using these steps:
 
@@ -34,16 +42,14 @@ There are theoretically n*m possible associations to link these two groups of
 MCS. Of course not all of them are meaningful. The rules that are applied 
 in the association process are:
 
-1. overlapping priority principle: for any MCS at time $t$, the MCS with the 
-highest percentage of overlap at time t+1 "wins" and is associated with it. 
-2. The MCS with the lowest percentage of overlap at time $t+1$ could form a 
-track on their own, and waits to be associated in the next iteration between
-t+1 and t+2.
-3. No merging or splitting is allowed, any MCS at time t can only be linked 
-to one MCS at time t+1, similarly, any MCS at time t+1 can only be linked
-to one MCS at time t.
-4. All tracks that do not get updated during the t - t+1 process terminate.
-This assumes that no gap in the track is allowed. 
+1. overlapping priority principle: for any MCS at time t, the MCS with the highest overlap
+percentage at time t+1 "wins" and is associated with it.
+2. The MCS (with lower or no overlap percentages) at time  𝑡+1  could form a track on their own, 
+and are left to be associated in the next iteration between  𝑡+1  and  𝑡+2 .
+3. No merging or splitting is allowed, any MCS at time  𝑡  can only be linked to one MCS at 
+time 𝑡+1 , similarly, any MCS at time  𝑡+1  can only be linked to one MCS at time 𝑡 .
+4. All tracks that do not get updated during the  𝑡  -  𝑡+1  process terminate. This assumes 
+that no gap in the track is allowed.
 5. Discard tracks that last 2 hours or less.
 
 ## Input data
@@ -54,11 +60,13 @@ minutes, data availability from February 7, 2000 to present. The interest
 variable of this dataset is `Tb` and the files format must be `netCDF4`.
 https://doi.org/10.5067/P4HZB9N27EKU
 
-
 In this case the algorithm is run 2 days 
 (2001/12/30/ 00 (UTC) - 2001/12/31/ 22 (UTC))
 for northern South America. The input data are in the notebooks folder in the
 repository. The raw data can be downloaded with the link at the top.
+
+We suggest the option subset/get data and use OpenDAP method for downloading
+and refining the date range and interest region.
 
 ## Steps
 
@@ -105,11 +113,12 @@ OUTDIR=r"C:/Users/ASUS/Documents/GitHub/atrackcs/scripts/2_output_data/"
 
 * AREA_TB: int, MCS with a minimun largest area.
 
-* THRESHOLD_OVERLAPPING_P: int, percentage overlap limit between MCS.
+* THRESHOLD_OVERLAPPING_P: int, percentage overlap limit between MCS to be considered part
+  of the track.
 
 * LOCATION_FOLIUM: list (lat, lon), location for center the map_folium.
 
-* MIN_DURATION: int, minimum required number of hours of a track.
+* MIN_DURATION: int, for filtering tracks based on minimun duration.
 """
 
 #32718 is the UTM zone 18S plane coordinate system. 
