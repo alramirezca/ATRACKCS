@@ -8,7 +8,7 @@ ATRACKCS provides a set of functions designed for a workflow analysis that inclu
 
 ### Technical details and Usage 
 
-`The MCS (regions) detection and characterization are performed using these steps: `
+The MCS (regions) detection and characterization are performed using these steps: 
 
 1. The input data: Tb and P area processed. The algorithm can operate with Tb as the only input variable. At a given time step, the algorithm finds all pixels where `Tb <= Tb_threshold [200 k - 240 k]` and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. 
 2. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold [>= 1000 km**2]` and estimate Tb attributes of those regions.
@@ -16,7 +16,7 @@ ATRACKCS provides a set of functions designed for a workflow analysis that inclu
 
 ![](joss/resume_atrackcs_1.png)
 
-`The tracks are performed using these steps:`
+The tracks are performed using these steps:
 
 4. overlapping priority principle: for any MCS at time t, the MCS with the highest overlap percentage at time `t+1` "wins" and is associated with it. The MCS (with lower or no overlap percentages) at time `t+1`could form a track on their own, and are left to be associated in the next iteration between `t+1` and `t+2`.
 No merging or splitting is allowed, any MCS at time t can only be linked to one MCS at time `t+1`. Similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`. All tracks that do not get updated during the `t` - `t+1` process terminate. 
