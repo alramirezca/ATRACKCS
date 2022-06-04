@@ -52,7 +52,7 @@ The algorithm's output is a structured CSV file containing the tracks of each de
 The MCS (regions) detection and characterization are performed using these steps: The following steps refer to Fig 1.
 
 1. The input data: Tb[@T2017] and P[@P2019] area processed. The algorithm can operate with Tb as the only input variable.
-2. At a given time step, the algorithm finds all pixels where Tb <= Tb_threshold [200 k - 240 k] and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold [> 1000 km**2] and estimate Tb attributes of those regions.
+2. At a given time step, the algorithm finds all pixels where Tb <= Tb_threshold $[200 k - 240 k]$ and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold $[> 1000 km^2]$ and estimate Tb attributes of those regions.
 3. Estimate P attributes of those regions and discard regions based on P rate and P area containing. This is optional.
 
 ![Fig 1. MCS detection and characterization](resume_atrackcs_1.png)
@@ -75,6 +75,7 @@ Notebooks and scripts presenting the algorithm functionalities based on use case
 
 Previous ATRACKCS version were presented in the oral presentation and poster in  American Geophysical Union (AGU) Fall Meeting in December 2021.
 1. Spatio-temporal Characterization of Mesoscale Convective Systems over Northern South America. In AGU Fall Meeting 2021 [@Rendon2021a].
+
 2. Cloud-resolving Simulations of Mesoscale Convective Systems in Colombia. In AGU Fall Meeting 2021 [@Rendon2021b].
 
 
