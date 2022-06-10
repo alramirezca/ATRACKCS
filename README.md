@@ -43,7 +43,7 @@ Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th ju
 
 ## Main Dependencies
 
-* Python3.7.
+* Python 3.7
 * netCDF4 (developed 1.5.6 in py3)
 * numpy (developed 1.20.1 in py3)
 * pandas (developed 1.3.5 in py3)
@@ -56,7 +56,7 @@ Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th ju
 * rioxarray (developed in 0.9.1 in py3)
 * rasterio (developed in 1.2.1 in py3)
 * folium (developed in in 0.12.1.post1 in py3)
-* OS: Linux or Windows, may work in MAC.
+* OS: Linux or Windows, may work in MAC
 
 ## Installation
 
