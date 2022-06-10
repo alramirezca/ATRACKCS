@@ -49,7 +49,7 @@ The algorithm's output is a structured CSV file containing the tracks of each de
 
 # Technical details and Usage 
 
-The MCS (regions) detection and characterization are performed using these steps: The following steps refer to Fig 1.
+The MCS (regions) detection and characterization are performed using these steps: The following steps refer to Figure 1.
 
 1. The input data: Tb [@T2017] and P [@P2019] area processed. The algorithm can operate with Tb as the only input variable.
 2. At a given time step, the algorithm finds all pixels where Tb <= Tb_threshold $[200 k - 240 k]$ and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold $[> 1000 km^2]$ and estimate Tb attributes of those regions.
@@ -57,7 +57,7 @@ The MCS (regions) detection and characterization are performed using these steps
 
 ![MCS detection and characterization.](resume_atrackcs_1.png)
 
-The tracks are performed using these steps: The following steps refer to Fig 2.
+The tracks are performed using these steps: The following steps refer to Figure 2.
 
 4. Overlapping priority principle: for any MCS at time t, the MCS with the highest overlap percentage at time t+1 "wins" and is associated with it. The MCS (with lower or no overlap percentages) at time t+1 could form a track on their own, and are left to be associated in the next iteration between t+1 and t+2.
 No merging or splitting is allowed, any MCS at time t can only be linked to one MCS at time t+1. Similarly, any MCS at time t+1 can only be linked to one MCS at time t. All tracks that do not get updated during the t - t+1 process terminate. 
@@ -69,11 +69,11 @@ The algorithm can be adapted to the needs of the MCS detection, as the user is a
 
 # Example use case
 
-Different applications can be made with ATRACKS. In this example we track a single MCS but the analyses can be extended both spatially and temporally depending on the interest.
+Different applications can be made with ATRACKS. This example tracks a single MCS, but the analyses can be extended both spatially and temporally depending on the interest.
 
-![Example use case. Cloud top Tb obtained from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.](example_3.png)
+![Cloud top Tb obtained from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.](example_3.png)
 
-Notebooks and scripts presenting the algorithm functionalities based on use cases are available on the [repository page](https://github.com/alramirezca/ATRACKCS/tree/main/notebooks) 
+Notebooks and scripts presenting the algorithm functionalities based on use cases are available on the [repository page](https://github.com/alramirezca/ATRACKCS). 
 
 # Past or ongoing research projects using the software
 

@@ -35,7 +35,7 @@ The algorithm can be adapted to the needs of the MCS detection, as the user is a
 We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining the date range and interest region.
 
 ## Example use case
-Different applications can be made with ATRACKS. In this example we track a single MCS but the analyses can be extended both spatially and temporally depending on the interest.
+Different applications can be made with ATRACKS. This example tracks a single MCS, but the analyses can be extended both spatially and temporally depending on the interest.
 
 ![](joss/example_3.png)
 
@@ -45,7 +45,7 @@ Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th ju
 
 * Python3.7.
 * netCDF4 (developed 1.5.6 in py3)
-* numpy (tdeveloped 1.20.1 in py3)
+* numpy (developed 1.20.1 in py3)
 * pandas (developed 1.3.5 in py3)
 * scipy (developed 1.7.3 in py3)
 * geopandas (developed in 0.9.0 in py3)
@@ -77,13 +77,13 @@ cd ATRACKCS
 conda env create -f env_py3.yml
 ```
 
-This creates a new environment named `atrackcs_py3`. Activate the environment using
+This creates a new environment named `atrackcs_py3`. Activate the environment using:
 
 ```
 conda activate atrackcs_py3
 ```
 
-After that, you can check the list of packages installed by
+After that, you can check the list of packages installed by:
 
 ```
 conda list
@@ -96,7 +96,7 @@ pip install -e .
 ```
 ## tests
 
-To validate installation, issue a new Python session and run
+To validate installation, issue a new Python session and run:
 
 ```
 import atrackcs
