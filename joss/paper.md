@@ -51,7 +51,7 @@ The algorithm's output is a structured CSV file containing the tracks of each de
 
 The MCS (regions) detection and characterization are performed using these steps: The following steps refer to Fig 1.
 
-1. The input data: Tb[@T2017] and P[@P2019] area processed. The algorithm can operate with Tb as the only input variable.
+1. The input data: Tb [@T2017] and P [@P2019] area processed. The algorithm can operate with Tb as the only input variable.
 2. At a given time step, the algorithm finds all pixels where Tb <= Tb_threshold $[200 k - 240 k]$ and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold $[> 1000 km^2]$ and estimate Tb attributes of those regions.
 3. Estimate P attributes of those regions and discard regions based on P rate and P area containing. This is optional.
 
@@ -71,20 +71,19 @@ The algorithm can be adapted to the needs of the MCS detection, as the user is a
 
 Different applications can be made with ATRACKS. In this example we track a single MCS but the analyses can be extended both spatially and temporally depending on the interest.
 
-![Example use case. Cloud top Tb obtained from the IMERG dataset from 08:00-16:00 UTC-5 8th Jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th Jul 2019 as determined using ATRACKS is shown in (d). The blue and red dots displays the location of the centroid of MCS iniciation and decay.](example_3.png)
+![Example use case. Cloud top Tb obtained from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.](example_3.png)
 
 Notebooks and scripts presenting the algorithm functionalities based on use cases are available on the [repository page](https://github.com/alramirezca/ATRACKCS/tree/main/notebooks) 
 
 # Past or ongoing research projects using the software
 
-Previous ATRACKCS version were presented in the oral presentation and poster in  American Geophysical Union (AGU) Fall Meeting in December 2021.
+Previous ATRACKCS version were presented in the oral presentation and poster in  American Geophysical Union (AGU) Fall Meeting in December 2021:
+
 1. Spatio-temporal Characterization of Mesoscale Convective Systems over Northern South America. In AGU Fall Meeting 2021 [@Rendon2021a].
-
 2. Cloud-resolving Simulations of Mesoscale Convective Systems in Colombia. In AGU Fall Meeting 2021 [@Rendon2021b].
-
 
 # Acknowledgements
 
-This research was funded by the Colombian Ministry of Science, Technology and Innovation (MINCIENCIAS) through the project : “Implementación de un sistema de investigación y pronóstico meteorológico de corto plazo con el modelo WRF, para apoyo a sistemas de comando y control de la Fuerza Aérea Colombiana” (code 1115-852-70955) with funds from “Patrimonio Autónomo Fondo Nacional de Financiamiento para la Ciencia, la Tecnología y la Innovación, Fondo Francisco José de Caldas”. IMERG and MERGE-IR data was obtained from NASA GES DISC server.
+This research was funded by the Colombian Ministry of Science, Technology and Innovation (MINCIENCIAS) through the project : “Implementación de un sistema de investigación y pronóstico meteorológico de corto plazo con el modelo WRF, para apoyo a sistemas de comando y control de la Fuerza Aérea Colombiana” (code 1115-852-70955) with funds from “Patrimonio Autónomo Fondo Nacional de Financiamiento para la Ciencia, la Tecnología y la Innovación, Fondo Francisco José de Caldas”. IMERG V06B (P) and Merge IR V1 (Tb) data was obtained from NASA GES DISC server.
 
 # References

@@ -39,7 +39,7 @@ Different applications can be made with ATRACKS. In this example we track a sing
 
 ![](joss/example_3.png)
 
-Cloud top Tb obtained from the IMERG dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the centroid of MCS iniciation and decay.
+Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.
 
 ## Main Dependencies
 
