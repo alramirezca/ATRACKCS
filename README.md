@@ -34,12 +34,12 @@ The algorithm can be adapted to the needs of the MCS detection, as the user is a
 
 We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining the date range and interest region.
 
-### Example use case
+## Example use case
 Different applications can be made with ATRACKS. In this example we track a single MCS but the analyses can be extended both spatially and temporally depending on the interest.
 
 ![](joss/example_3.png)
 
-Example use case. Cloud top Tb obtained from the IMERG dataset from 08:00-16:00 UTC-5 8th Jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th Jul 2019 as determined using ATRACKS is shown in (d). The blue and red dots displays the location of the centroid of MCS iniciation and decay.
+Cloud top Tb obtained from the IMERG dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the centroid of MCS iniciation and decay.
 
 ## Main Dependencies
 
