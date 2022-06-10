@@ -27,7 +27,7 @@ affiliations:
    index: 2
 
 
-date: 03 May 2022
+date: 10 Jun 2022
 bibliography: paper.bib
 
 ---
@@ -84,6 +84,6 @@ Previous ATRACKCS version were presented in the oral presentation and poster in 
 
 # Acknowledgements
 
-This research was funded by the Colombian Ministry of Science, Technology and Innovation (MINCIENCIAS) through the project : “Implementación de un sistema de investigación y pronóstico meteorológico de corto plazo con el modelo WRF, para apoyo a sistemas de comando y control de la Fuerza Aérea Colombiana” (code 1115-852-70955) with funds from “Patrimonio Autónomo Fondo Nacional de Financiamiento para la Ciencia, la Tecnología y la Innovación, Fondo Francisco José de Caldas”. IMERG V06B (P) and Merge IR V1 (Tb) data was obtained from NASA GES DISC server.
+This research was funded by the Colombian Ministry of Science, Technology and Innovation (MINCIENCIAS) through the project: “Implementación de un sistema de investigación y pronóstico meteorológico de corto plazo con el modelo WRF, para apoyo a sistemas de comando y control de la Fuerza Aérea Colombiana” (code 1115-852-70955) with funds from “Patrimonio Autónomo Fondo Nacional de Financiamiento para la Ciencia, la Tecnología y la Innovación, Fondo Francisco José de Caldas”. IMERG V06B (P) and Merge IR V1 (Tb) data was obtained from NASA GES DISC server.
 
 # References
