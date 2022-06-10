@@ -55,7 +55,7 @@ The MCS (regions) detection and characterization are performed using these steps
 2. At a given time step, the algorithm finds all pixels where Tb <= Tb_threshold $[200 k - 240 k]$ and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold $[> 1000 km^2]$ and estimate Tb attributes of those regions.
 3. Estimate P attributes of those regions and discard regions based on P rate and P area containing. This is optional.
 
-![MCS detection and characterization](resume_atrackcs_1.png)
+![MCS detection and characterization.](resume_atrackcs_1.png)
 
 The tracks are performed using these steps: The following steps refer to Fig 2.
 
@@ -63,7 +63,7 @@ The tracks are performed using these steps: The following steps refer to Fig 2.
 No merging or splitting is allowed, any MCS at time t can only be linked to one MCS at time t+1. Similarly, any MCS at time t+1 can only be linked to one MCS at time t. All tracks that do not get updated during the t - t+1 process terminate. 
 5. Estimate MCS and tracks attributes.
 
-![Tracking MCS and estimates attributes ](resume_atrackcs_2.png)
+![Tracking MCS and estimates attributes.](resume_atrackcs_2.png)
 
 The algorithm can be adapted to the needs of the MCS detection, as the user is allowed to define the thresholds of Tb and P (no required).
 
