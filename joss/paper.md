@@ -12,13 +12,15 @@ authors:
     affiliation: 1
   - name: Robledo Vanessa
     affiliation: "1"
-  - name: Rendón Angela
+  - name: Rendón Angela M.
     affiliation: "1, 2"
-  - name: Henao Juan Jose
+  - name: Henao Juan J.
     affiliation: "1"
-  - name: Hernandez Kevin Santiago
+  - name: Hernández K. Santiago
     affiliation: "1"
   - name: Gómez-Ríos Sebastián
+    affiliation: "1"
+  - name: Mejía John F.
     affiliation: "1"
 affiliations:
  - name:  GEOLIMNA, School of Environment, Universidad de Antioquia, Medellin, Colombia
