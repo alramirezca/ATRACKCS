@@ -2,7 +2,7 @@
 
 ## Introduction
 
-ATRACKCS is a Python package for the automated detection and tracking of Mesoscale convective systems (MCS). MCS are organized cloud clusters that produce regional rainfall and feature vertical development penetrating the mid-upper troposphere. The spatio-temporal characterization of MCS plays a fundamental role in understanding weather and regional climate, and contributes to reducing the vulnerability to severe precipitation events. This Python package is a potential tool for characterizing spatio-temporal distribution and evolution of MCS and is intended for researchers and students interested in exploring MCS dynamics. 
+ATRACKCS is a Python package for the automated detection and tracking of Mesoscale convective systems (MCS). MCS are organized cloud clusters that produce regional rainfall and feature vertical development penetrating the mid-upper troposphere. The spatio-temporal characterization of MCS contributed to reducing the vulnerability to severe precipitation events, as well as understanding weather and regional climate. This Python package is a potential tool for characterizing spatio-temporal distribution and evolution of MCS and is intended for researchers and students interested in exploring MCS dynamics. 
 
 ATRACKCS provides a set of functions designed for a workflow analysis that includes the detection and characterization of MCS, as well as the integration in tracks, allowing detailed monitoring of the MCS life cycle both in space and time. The algorithm uses brightness temperature (Tb) and precipitation (P) coming from public satellite data and can operate with Tb as the only input variable or associating precipitation features. The algorithm parameterization can be adapted to the needs of the MCS detection, as the user is allowed to define the thresholds of Tb and P. 
 
@@ -10,15 +10,15 @@ ATRACKCS provides a set of functions designed for a workflow analysis that inclu
 
 The MCS (regions) detection and characterization are performed using these steps: 
 
-1. The input data: Tb and P area processed. The algorithm can operate with Tb as the only input variable. At a given time step, the algorithm finds all pixels where `Tb <= Tb_threshold [200 k - 240 k]` and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. 
-2. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold [>= 1000 km**2]` and estimate Tb attributes of those regions.
+1. The input data: Tb and P area processed. The algorithm can operate with Tb as the only input variable. At a given time step, the algorithm finds all pixels where `Tb <= Tb_threshold [200 k, 240 k]` and defines approximate regions with the convex hull, using a binary structure where the pixels that satisfy the described condition are equal to 1 and the remaining pixels are equal to 0. 
+2. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold [>= 1000 km^2]` and estimate Tb attributes of those regions.
 3. Estimate P attributes of those regions and discard regions based on P rate and P area containing. This is optional.
 
 ![](joss/resume_atrackcs_1.png)
 
 The tracks are performed using these steps:
 
-4. overlapping priority principle: for any MCS at time t, the MCS with the highest overlap percentage at time `t+1` "wins" and is associated with it. The MCS (with lower or no overlap percentages) at time `t+1`could form a track on their own, and are left to be associated in the next iteration between `t+1` and `t+2`.
+4. overlapping priority principle: for any MCS at time t, the MCS with the highest overlap percentage at time `t+1` "wins" and is associated with it. If there are MCS with lower overlap percentages, they are left to be associated in the next iteration and form a track on their own.
 No merging or splitting is allowed, any MCS at time t can only be linked to one MCS at time `t+1`. Similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`. All tracks that do not get updated during the `t` - `t+1` process terminate. 
 5. Estimate MCS and tracks attributes.
 
