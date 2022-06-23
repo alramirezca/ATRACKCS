@@ -41,6 +41,10 @@ Different applications can be made with ATRACKS. This example tracks a single MC
 
 Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.
 
+## Runtime and efficiency
+
+Accurately measuring the runtime and efficiency of ATRACKCS is not a trivial task, since the results may vary significantly due to factors associated with the hardware, software, input region and algorithm parameterization. With the intention of giving a base time estimate, the algorithm was executed for the northern region of South America, composed of 300 pixels (latitude) by 300 pixels (longitude), for the dates between 2019-12-24 19:00 and 2019-12-31 18:00 (168 hours), with a computer equipped with Windows 10 operating system, with an Intel Core i5-8250U processor - 1. 80 GHz and 12 GB RAM; for more details of the algorithm parameterization, please refer the example hosted in the repository page [1_detect_and_track_MCS_scheme_Tb_and_P](https://github.com/alramirezca/ATRACKCS/blob/main/notebooks/1_detect_and_track_MCS_scheme_Tb_and_P.ipynb). This submitted example took 14.5 minutes to be executed and identified 3200 MCS organized in 1207 tracks.
+
 ## Main Dependencies
 
 * Python 3.7
