@@ -7,29 +7,34 @@ tags:
   - Weather
   - Tracking
 authors:
-  - name: Ramírez-Cardona Álvaro
+  - name: Álvaro Ramírez-Cardona 
     orcid: 0000-0003-2887-7763
     affiliation: 1
-  - name: Robledo Vanessa
+  - name: Vanessa Robledo 
     affiliation: "1"
-  - name: Rendón Angela M.
+  - name: Angela M. Rendón A.
     affiliation: "1, 2"
-  - name: Henao Juan J.
+  - name: Juan J. Henao 
     affiliation: "1"
-  - name: Hernández K. Santiago
+  - name:  K. Santiago Hernández
     affiliation: "1"
-  - name: Gómez-Ríos Sebastián
+  - name: Sebastián Gómez-Ríos 
     affiliation: "1"
-  - name: Mejía John F.
-    affiliation: "1"
+  - name: Jimmy Anderson Flórez Zuluaga
+    affiliation: "2"
+  - name: Sara Lorduy Hernandez
+    affiliation: "2"
+  - name: John F. Mejía 
+    affiliation: "3"
 affiliations:
  - name:  GEOLIMNA, School of Environment, Universidad de Antioquia, Medellin, Colombia
    index: 1
- - name: GIGA, School of Environment, Universidad de Antioquia, Medellin, Colombia
+ - name:  CETAD, Colombian Air Force, Rionegro, Colombia
    index: 2
-
-
-date: 10 Jun 2022
+ - name: Department of Atmospheric Sciences, Desert Research Institute, Reno, NV, USA
+   index: 3
+   
+date: 11 Jul 2022
 bibliography: paper.bib
 
 ---
