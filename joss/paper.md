@@ -13,7 +13,7 @@ authors:
   - name: Vanessa Robledo 
     affiliation: "1"
   - name: Angela M. Rendón A.
-    affiliation: "1, 2"
+    affiliation: "1"
   - name: Juan J. Henao 
     affiliation: "1"
   - name:  K. Santiago Hernández
