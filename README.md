@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/479858216.svg)](https://zenodo.org/badge/latestdoi/479858216)
+
 # Algorithm for Tracking Convective Systems (ATRACKCS)
 
 ## Introduction
@@ -119,7 +121,7 @@ If nothing prints out, installation is successful.
 
 ### v1.0
 
-* initial upload. Can perform MCS detection and tracking through time and space.
+* Can perform MCS detection and tracking through time and space.
 
 ## Use in researchs
 
