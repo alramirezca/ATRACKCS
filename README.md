@@ -2,7 +2,6 @@
 
 ![](joss/ATRACKCS_LOGO_.png)
 
-# Algorithm for Tracking Convective Systems (ATRACKCS)
 
 ## Introduction
 
