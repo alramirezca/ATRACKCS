@@ -133,3 +133,5 @@ If nothing prints out, installation is successful.
 [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia).
 [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
 
+## Cite as
+Ramírez-Cardona Álvaro, Robledo Vanessa, Rendón A. Angela M., Henao Juan. J, Hernández, K. Santiago, Gómez-Ríos Sebastián, Flórez Z. Jimmy. A., Lorduy Hernández Sara, & Mejía John F. (2022). Algorithm for Tracking Convective Systems (ATRACKCS) (v1.0). Zenodo. https://doi.org/10.5281/zenodo.7025990
