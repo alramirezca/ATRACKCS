@@ -1,5 +1,7 @@
 [![DOI](https://zenodo.org/badge/479858216.svg)](https://zenodo.org/badge/latestdoi/479858216)
 
+![](joss/ATRACKCS_LOGO_.png)
+
 # Algorithm for Tracking Convective Systems (ATRACKCS)
 
 ## Introduction
