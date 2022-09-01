@@ -135,3 +135,7 @@ If nothing prints out, installation is successful.
 
 ## Cite as
 Ramírez-Cardona Álvaro, Robledo Vanessa, Rendón A. Angela M., Henao Juan. J, Hernández, K. Santiago, Gómez-Ríos Sebastián, Flórez Z. Jimmy. A., Lorduy Hernández Sara, & Mejía John F. (2022). Algorithm for Tracking Convective Systems (ATRACKCS) (v1.0). Zenodo. https://doi.org/10.5281/zenodo.7025990
+
+## Acknowledgements
+
+This research was funded by the Colombian Ministry of Science, Technology and Innovation (MINCIENCIAS) through the project: “Implementación de un sistema de investigación y pronóstico meteorológico de corto plazo con el modelo WRF, para apoyo a sistemas de comando y control de la Fuerza Aérea Colombiana” (code 1115-852-70955) with funds from “Patrimonio Autónomo Fondo Nacional de Financiamiento para la Ciencia, la Tecnología y la Innovación, Fondo Francisco José de Caldas”. 
