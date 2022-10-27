@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-characterizing brightness temperature, precipitation and tracks
+characterizing brightness temperature, precipitation features and tracks
 @authors: Álvaro Ramírez Cardona (alramirezca@unal.edu.co)
           Vanessa Robledo Delgado (vanessa.robledo@udea.edu.co)
 """

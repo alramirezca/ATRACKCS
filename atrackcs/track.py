@@ -50,14 +50,14 @@ def track_mcs(sup, threshold_overlapping_percentage = None, utm_local_zone = Non
     global msc_counter
     """
     Function for tracking convective systems according to the threshold_overlapping_percentage.
-    This functions works based on identified convective systems in a period of time.   
+    This functions works based on identified convective systems in a time period.   
 
     Inputs:
     * sup: GeoDataFrame, result data generated in the process features_Tb() 
     and features_P (when is using this detect scheme).
     * threshold_overlapping_percentage: float, by default there is no percentage overlap limit 
     between polygons, however, this can be set. 
-    (ex. 10: this means that the percentage of overlap that is not greater than or equal to 10%, 
+    (i.e. 10: this means that the percentage of overlap that is not greater than or equal to 10%, 
     in reference to the largest area polygon, is not taken into account in the trajectory).
     * utm_local_zone: int, is needed for converting the WGS geodetic coordinate system 
     to plane coordinate system. This is a constant that must be asociated with the interest 

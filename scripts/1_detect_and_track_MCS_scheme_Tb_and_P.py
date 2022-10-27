@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Track Mesoescale Convective Systems (MCS) at consecutive time steps to
-form tracks with a scheme based on brightness temperature and precipitation
+form tracks with a scheme based on brightness temperature and precipitation rates
+
 @authors: Álvaro Ramírez Cardona (alramirezca@unal.edu.co)
           Vanessa Robledo Delgado (vanessa.robledo@udea.edu.co)
           
@@ -48,8 +49,8 @@ There are theoretically  𝑛×𝑚  possible associations to link these two gro
 Of course not all of them are meaningful. The rules that are applied in the association
 process are:
 
-1. overlapping priority principle: for any MCS at time t, the MCS with the highest overlap
-percentage at time t+1 "wins" and is associated with it.
+1. Overlapping priority principle: for any MCS at time t, the MCS with the highest overlap
+percentage at time t+1 is associated with it.
 2. The MCS (with lower or no overlap percentages) at time  𝑡+1  could form a track on their own, 
 and are left to be associated in the next iteration between  𝑡+1  and  𝑡+2 .
 3. No merging or splitting is allowed, any MCS at time  𝑡  can only be linked to one MCS at 
@@ -157,9 +158,9 @@ TB = 225 #[Feng et al.,(2021); Li et al.,(2020)]
 
 AREA_TB = 2000 # [Lui et al., (2019); Vizy & Cook,(2018)] 
 
-MIN_P = 2 #[Feng et al.,(2021)]  
+MIN_P = 2 #[Feng et al.,(2021);Li et al.,(2020)]  
 
-AREA_P = 500 #[Feng et al.,(2021)]
+AREA_P = 500 #[Schumacher et al.,(2021)]
 
 DROP_EMPTY_PRECIPITATION = False
 
