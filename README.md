@@ -1,4 +1,7 @@
-# Algorithm for Tracking Convective Systems (ATRACKCS)
+[![DOI](https://zenodo.org/badge/479858216.svg)](https://zenodo.org/badge/latestdoi/479858216)
+
+![](joss/ATRACKCS_LOGO_.png)
+
 
 ## Introduction
 
@@ -35,11 +38,15 @@ The algorithm can be adapted to the needs of the MCS detection, as the user is a
 We suggest the option `subset/get data` and use `OpenDAP` method for downloading and refining the date range and interest region.
 
 ## Example use case
-Different applications can be made with ATRACKS. This example tracks a single MCS, but the analyses can be extended both spatially and temporally depending on the interest.
+Different applications can be made with ATRACKCS. This example tracks a single MCS, but the analyses can be extended both spatially and temporally depending on the interest.
 
 ![](joss/example_3.png)
 
-Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.
+Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKCS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.
+
+## Runtime and efficiency
+
+Accurately measuring the runtime and efficiency of ATRACKCS is not a trivial task, since the results may vary significantly due to factors associated with the hardware, software, input region and algorithm parameterization. With the intention of giving a base time estimate, the algorithm was executed for the northern region of South America, composed of 300 pixels (latitude) by 300 pixels (longitude), for the dates between 2019-12-24 19:00 and 2019-12-31 18:00 (168 hours), with a computer equipped with Windows 10 operating system, with an Intel Core i5-8250U processor - 1. 80 GHz and 12 GB RAM; for more details of the algorithm parameterization, please refer the example hosted in the repository page [1_detect_and_track_MCS_scheme_Tb_and_P](https://github.com/alramirezca/ATRACKCS/blob/main/notebooks/1_detect_and_track_MCS_scheme_Tb_and_P.ipynb). This submitted example took 14.5 minutes to be executed and identified 3200 MCS organized in 1207 tracks.
 
 ## Main Dependencies
 
@@ -115,7 +122,7 @@ If nothing prints out, installation is successful.
 
 ### v1.0
 
-* initial upload. Can perform MCS detection and tracking through time and space.
+* Can perform MCS detection and tracking through time and space.
 
 ## Use in researchs
 
@@ -126,3 +133,9 @@ If nothing prints out, installation is successful.
 [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia).
 [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
 
+## Cite as
+Ramírez-Cardona Álvaro, Robledo Vanessa, Rendón A. Angela M., Henao Juan. J, Hernández, K. Santiago, Gómez-Ríos Sebastián, Flórez Z. Jimmy. A., Lorduy Hernández Sara, & Mejía John F. (2022). Algorithm for Tracking Convective Systems (ATRACKCS) (v1.0). Zenodo. https://doi.org/10.5281/zenodo.7025990
+
+## Acknowledgements
+
+This research was funded by the Colombian Ministry of Science, Technology and Innovation (MINCIENCIAS) through the project: “Implementación de un sistema de investigación y pronóstico meteorológico de corto plazo con el modelo WRF, para apoyo a sistemas de comando y control de la Fuerza Aérea Colombiana” (code 1115-852-70955) with funds from “Patrimonio Autónomo Fondo Nacional de Financiamiento para la Ciencia, la Tecnología y la Innovación, Fondo Francisco José de Caldas”. 
