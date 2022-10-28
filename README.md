@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/479858216.svg)](https://zenodo.org/badge/latestdoi/479858216)
 
-![](joss/ATRACKCS_LOGO_.png)
+![](repo/ATRACKCS_LOGO_.png)
 
 
 ## Introduction
@@ -17,7 +17,7 @@ The MCS (regions) detection and characterization are performed using these steps
 2. Transform from geographic to plane coordinates and compute an approximate area of the defined region, discard all regions where area is `<= area_threshold [>= 1000 km^2]` and estimate Tb attributes of those regions.
 3. Estimate P attributes of those regions and discard regions based on P rate and P area containing. This is optional.
 
-![](joss/resume_atrackcs_1.png)
+![](repo/resume_atrackcs_1.png)
 
 The tracks are performed using these steps:
 
@@ -25,7 +25,7 @@ The tracks are performed using these steps:
 No merging or splitting is allowed, any MCS at time t can only be linked to one MCS at time `t+1`. Similarly, any MCS at time `t+1` can only be linked to one MCS at time `t`. All tracks that do not get updated during the `t` - `t+1` process terminate. 
 5. Estimate MCS and tracks attributes.
 
-![](joss/resume_atrackcs_2.png)
+![](repo/resume_atrackcs_2.png)
 
 The algorithm can be adapted to the needs of the MCS detection, as the user is allowed to define the thresholds of Tb and P (no required). Notebooks and scripts presenting the algorithm functionalities based on use cases are available on the repository page. 
 
@@ -40,7 +40,7 @@ We suggest the option `subset/get data` and use `OpenDAP` method for downloading
 ## Example use case
 Different applications can be made with ATRACKCS. This example tracks a single MCS, but the analyses can be extended both spatially and temporally depending on the interest.
 
-![](joss/example_3.png)
+![](repo/example_3.png)
 
 Cloud top Tb obtained from the Merge IR V1 dataset from 08:00-16:00 UTC-5 8th jul 2019 are shown in (a–c). The pixels contained within red contours have Tb less than 225 K. The MCS trajectory that form on 8th jul 2019 was determined using ATRACKCS is shown in (d). The blue and red dots displays the location of the geometric centroid of MCS iniciation and decay.
 
@@ -115,8 +115,10 @@ If nothing prints out, installation is successful.
 
 * atrackcs: core module functions.
 * notebooks: a series of jupyter notebooks illustrating the major functionalities of the package.
+* repo: figures - repository content.
 * scripts: example computation scripts. 
 * test: integration tests for detecting schemes.
+
 
 ## Changelog
 
