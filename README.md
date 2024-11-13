@@ -142,8 +142,15 @@ If nothing prints out, installation is successful.
 * Vergara, H. J., Robledo, V., Anagnostopoulos, G., Aravamudan, A., Zhang, X., Nikolopoulos, E. I., ... & Forero, G. (2023). Improving Flash Flood Monitoring and Forecasting Capabilities in West Africa with Satellite Observations and Precipitation Forecasts. AGU23.
 [AGU fall meeting 2023](https://agu.confex.com/agu/fm23/meetingapp.cgi/Paper/1403991).
 
-## Cite as
-Ramírez-Cardona Álvaro, Robledo Vanessa, Rendón A. Angela M., Henao Juan. J, Hernández, K. Santiago, Gómez-Ríos Sebastián,  & Mejía John F. (2022). Algorithm for Tracking Convective Systems (ATRACKCS) (v1.0). Zenodo. https://doi.org/10.5281/zenodo.7025990
+* Robledo, V., Henao, J. J., Mejía, J. F., Ramírez‐Cardona, Á., Hernández, K. S., Gómez‐Ríos, S., & Rendón, Á. M. (2024). Climatological tracking and lifecycle characteristics of mesoscale convective systems in Northwestern South America. Journal of Geophysical Research: Atmospheres,129, e2024JD041159. https://doi.org/10.1029/2024JD041159
+
+## Cite publication as
+
+Robledo, V., Henao, J. J., Mejía, J. F., Ramírez‐Cardona, Á., Hernández, K. S., Gómez‐Ríos, S., & Rendón, Á. M. (2024). Climatological tracking and lifecycle characteristics of mesoscale convective systems in Northwestern South America. Journal of Geophysical Research: Atmospheres,129, e2024JD041159. https://doi.org/10.1029/2024JD041159
+
+## Cite this package as
+
+Ramírez-Cardona Álvaro, Robledo Vanessa, Rendón A. Angela M., Henao Juan. J, Hernández, K. Santiago, Gómez-Ríos Sebastián, & Mejía John F. (2022). Algorithm for Tracking Convective Systems (ATRACKCS) (v1.0). Zenodo. https://doi.org/10.5281/zenodo.7025990
 
 ## Acknowledgements
 
