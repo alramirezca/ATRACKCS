@@ -137,15 +137,13 @@ If nothing prints out, installation is successful.
    AGU23. [AGU fall meeting 2023](https://agu.confex.com/agu/fm23/meetingapp.cgi/Paper/1403991).
 
 3. **Climatological characteristics of deep convection in Northwestern South America using a persistence tracking technique.**  
-   In *American Geophysical Union Fall Meeting 2022.*  
-   [ResearchGate](https://www.researchgate.net/publication/366461770_Climatological_characteristics_of_deep_convection_in_Northwestern_South_America_using_a_persistence_tracking_technique).[AGU fall meeting 2022](https://agu.confex.com/agu/fm22/meetingapp.cgi/Paper/1175671).
+   In *American Geophysical Union Fall Meeting 2022.* [ResearchGate](https://www.researchgate.net/publication/366461770_Climatological_characteristics_of_deep_convection_in_Northwestern_South_America_using_a_persistence_tracking_technique). [AGU fall meeting 2022](https://agu.confex.com/agu/fm22/meetingapp.cgi/Paper/1175671).
 
 4. **Spatio-temporal Characterization of Mesoscale Convective Systems over Northern South America.**  
    In *American Geophysical Union Fall Meeting 2021.* [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/874852).
 
 5. **Cloud-resolving Simulations of Mesoscale Convective Systems in Colombia.**  
-   In *American Geophysical Union Fall Meeting 2021.*  
-   [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia). [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
+   In *American Geophysical Union Fall Meeting 2021.* [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia).[AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
 
 
 ## Cite publication as
