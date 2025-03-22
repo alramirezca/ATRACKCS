@@ -143,7 +143,7 @@ If nothing prints out, installation is successful.
    In *American Geophysical Union Fall Meeting 2021.* [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/874852).
 
 5. **Cloud-resolving Simulations of Mesoscale Convective Systems in Colombia.**  
-   In *American Geophysical Union Fall Meeting 2021.* [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia).[AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
+   In *American Geophysical Union Fall Meeting 2021.* [ResearchGate](https://www.researchgate.net/publication/357975142_Cloud-resolving_Simulations_of_Mesoscale_Convective_Systems_in_Colombia). [AGU fall meeting 2021](https://agu.confex.com/agu/fm21/meetingapp.cgi/Paper/875417).
 
 
 ## Cite publication as
